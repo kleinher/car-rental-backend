@@ -8,6 +8,8 @@ yarn-error.log*
 # Node.js dependencies
 node_modules/
 bower_components/
+wwebjs_auth/
+
 
 # Environment variables
 .env
