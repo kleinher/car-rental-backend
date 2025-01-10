@@ -66,3 +66,5 @@ temp/
 
 # TypeScript
 *.tsbuildinfo
+.wwebjs_auth/
+.wwebjs_cache/
