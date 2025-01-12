@@ -4,7 +4,7 @@ const logger = require('../config/logger');
 
 // Crear el cliente
 const client = new Client({
-    authStrategy: new LocalAuth(), // Guarda la sesión de forma local
+    authStrategy: new LocalAuth(),
 });
 
 // Escuchar eventos
@@ -17,9 +17,8 @@ client.on('ready', () => {
 });
 
 client.on('message', (message) => {
-    console.log('Mensaje recibido:', message.body);
+    console.log('Mensaje recibido:', message);
 });
-
 
 
 module.exports = client;
