@@ -5,8 +5,11 @@ class CarsClient {
         this.data = initialCars;
     }
 
-    updateCar(id, newValues) {
+    updateCar(car) {
+        const carIndex = this.data.findIndex(c => c.licensePlate === car.licensePlate);
 
+        this.data[carIndex] = car;
+        return;
     }
 
     addCar(newCar) {
@@ -14,8 +17,8 @@ class CarsClient {
         return newCar;
     }
 
-    getCarByPlateAndPhone(licencePlate, phoneNumber) {
-        const car = this.data.find(car => car.licencePlate === licencePlate && car.phoneNumber === phoneNumber);
+    getCarByPlateAndPhone(licensePlate, phoneNumber) {
+        const car = this.data.find(car => car.licensePlate === licensePlate && car.phoneNumber === phoneNumber);
         if (!car) {
             throw new Error('Car not found');
         }

@@ -10,5 +10,5 @@ const initialCars = [
     { id: 9, model: "Mazda 3", user: "Laura", userId: 1, kilometers: 13000, lastUpdated: "2024-12-29", licensePlate: "YZA567", phoneNumber: "5493743515495", reminderSent: true, reminderSentDate: "2024-12-31", inMaintenance: true },
 ];
 
-module.exports = { initialCars };
+module.exports = initialCars;
 

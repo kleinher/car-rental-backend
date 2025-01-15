@@ -1,6 +1,6 @@
 const logger = require('../config/logger');
 const notificationService = require('../service/NotificationService');
-const { setDataWithCache } = require('../service/UpdateService');
+const updateService = require('../service/UpdateService');
 
 class NotificationController {
     constructor() {
@@ -16,7 +16,7 @@ class NotificationController {
             }
 
             await notificationService.sendNotification(number, message);
-            await setDataWithCache(number, licencePlate);
+            await updateService.setDataWithCache(number, licencePlate);
 
             res.status(200).json({ success: true, message: 'Notification sent successfully' });
         } catch (error) {
