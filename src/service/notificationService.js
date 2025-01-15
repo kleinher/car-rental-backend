@@ -6,11 +6,9 @@ const sendNotification = async (number, message, res) => {
         const chatId = `${number}@c.us`; // Formato de ID de WhatsApp
         await client.sendMessage(chatId, message);
 
-        logger.info('Mensaje enviado:', message);
-        res.status(200).json({ success: true, message: 'Mensaje enviado' });
+        logger.info('Mensaje enviado:' + message);
     } catch (error) {
-        logger.error('Error al enviar mensaje:', error);
-        res.status(500).json({ success: false, message: 'Error al enviar mensaje' });
+        logger.error('Error al enviar mensaje:' + error);
     }
 };
 

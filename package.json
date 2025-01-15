@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +18,16 @@
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.26.0",
     "winston": "^3.17.0"
-  }
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kleinher/whatsapp-micro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kleinher/whatsapp-micro/issues"
+  },
+  "homepage": "https://github.com/kleinher/whatsapp-micro#readme"
 }
