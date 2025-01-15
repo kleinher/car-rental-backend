@@ -1,10 +1,12 @@
 const logger = require('../config/logger');
-const notificationService = require('../service/notificationService');
+const notificationService = require('../service/NotificationService');
 const { setDataWithCache } = require('../service/updateService');
-const express = require('express');
-const notificationRouter = express.Router();
 
 class NotificationController {
+    constructor() {
+        this.notificationService = notificationService;
+    }
+
     async sendNotification(req, res) {
         try {
             const { number, message, licencePlate } = req.body;
@@ -24,7 +26,5 @@ class NotificationController {
     }
 }
 
-const notificationController = new NotificationController();
-notificationRouter.post('/send', notificationController.sendNotification.bind(notificationController));
 
-module.exports = { notificationRouter, NotificationController };
+module.exports = new NotificationController();

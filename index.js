@@ -2,8 +2,7 @@ const express = require('express');
 const whatsappClient = require('./src/client/whatsapp');
 const logger = require('./src/config/logger');
 const cors = require("cors");
-const { notificationRouter } = require('./src/controllers/notificationController');
-
+const router = require('./src/routes/routes');
 require('dotenv').config();
 const app = express();
 
@@ -14,7 +13,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Methods", "Access-Control-Request-Headers"],
 }));
 
-app.use('/api/notification', notificationRouter);
+app.use('/api/notification', router);
 
 whatsappClient.initialize();
 
