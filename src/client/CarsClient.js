@@ -32,4 +32,4 @@ class CarsClient {
     }
 }
 
-module.exports = CarsClient;
+module.exports = new CarsClient();

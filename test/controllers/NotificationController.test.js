@@ -1,10 +1,10 @@
 const NotificationController = require('../../src/controllers/NotificationController');
 const notificationService = require('../../src/service/NotificationService');
-const { setDataWithCache } = require('../../src/service/updateService');
+const { setDataWithCache } = require('../../src/service/UpdateService');
 const logger = require('../../src/config/logger');
 
 jest.mock('../../src/service/NotificationService');
-jest.mock('../../src/service/updateService');
+jest.mock('../../src/service/UpdateService');
 jest.mock('../../src/config/logger');
 
 describe('NotificationController', () => {

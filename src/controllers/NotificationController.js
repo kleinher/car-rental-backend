@@ -1,6 +1,6 @@
 const logger = require('../config/logger');
 const notificationService = require('../service/NotificationService');
-const { setDataWithCache } = require('../service/updateService');
+const { setDataWithCache } = require('../service/UpdateService');
 
 class NotificationController {
     constructor() {

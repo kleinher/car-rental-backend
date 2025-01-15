@@ -1,5 +1,4 @@
 const express = require('express');
-const whatsappClient = require('./src/client/whatsapp');
 const logger = require('./src/config/logger');
 const cors = require("cors");
 const router = require('./src/routes/routes');
@@ -15,7 +14,6 @@ app.use(cors({
 
 app.use('/api/notification', router);
 
-whatsappClient.initialize();
 
 // Inicia el servidor
 const PORT = process.env.PORT;
