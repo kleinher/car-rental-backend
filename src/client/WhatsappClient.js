@@ -1,48 +1,45 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const logger = require('../config/logger');
-const UpdateService = require('../service/UpdateService');
+const { updateDataWithCache } = require('../service/UpdateService');
 
-class WhatsappClient {
-    constructor() {
-        this.client = new Client({
-            authStrategy: new LocalAuth(),
-        });
+const client = new Client({
+    authStrategy: new LocalAuth(),
+});
 
-        this.updateService = UpdateService;
-        this.initialize();
-    }
+function initialize() {
+    client.initialize();
 
-    initialize() {
-        this.client.initialize();
+    client.on('qr', (qr) => {
+        qrcode.generate(qr, { small: true });
+    });
 
-        this.client.on('qr', (qr) => {
-            qrcode.generate(qr, { small: true });
-        });
+    client.on('ready', () => {
+        console.log('Cliente listo');
+    });
 
-        this.client.on('ready', () => {
-            console.log('Cliente listo');
-        });
+    client.on('auth_failure', (msg) => {
+        console.error('Authentication failure:', msg);
+    });
 
-        this.client.on('auth_failure', (msg) => {
-            console.error('Authentication failure:', msg);
-        });
+    client.on('disconnected', (reason) => {
+        console.log('Client was logged out', reason);
+    });
 
-        this.client.on('disconnected', (reason) => {
-            console.log('Client was logged out', reason);
-        });
+    client.on('error', (error) => {
+        console.error('Client error:', error);
+    });
 
-        this.client.on('error', (error) => {
-            console.error('Client error:', error);
-        });
-
-        this.client.on('message', async (message) => {
-            const senderNumber = message.from.split('@')[0];
-            this.updateService.updateDataWithCache(senderNumber, message.body);
-        });
-
-
-    }
+    client.on('message', async (message) => {
+        const senderNumber = message.from.split('@')[0];
+        updateDataWithCache(senderNumber, message.body);
+    });
 }
 
-module.exports = new WhatsappClient();
+async function sendMessage(number, message) {
+    return client.sendMessage(number, message);
+}
+
+initialize();
+
+module.exports = { client, sendMessage };

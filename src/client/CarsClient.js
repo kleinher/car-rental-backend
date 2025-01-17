@@ -1,38 +1,51 @@
 const initialCars = require('../resources/data.js');
+let data = initialCars;
 
-class CarsClient {
-    constructor() {
-        this.data = initialCars;
+
+function getAllCars() {
+    return data;
+}
+
+function updateCar(car) {
+    const carIndex = data.findIndex(c => c.licensePlate === car.licensePlate);
+    data[carIndex] = car;
+}
+
+function addCar(newCar) {
+    data.push(newCar);
+    return newCar;
+}
+
+function getCarByPlateAndPhone(licensePlate, phoneNumber) {
+    const car = data.find(car => car.licensePlate === licensePlate && car.phoneNumber === phoneNumber);
+    if (!car) {
+        throw new Error('Car not found');
     }
+    return car;
+}
 
-    updateCar(car) {
-        const carIndex = this.data.findIndex(c => c.licensePlate === car.licensePlate);
-
-        this.data[carIndex] = car;
-        return;
+function getCarByPlate(licensePlate) {
+    const car = data.find(car => car.licensePlate === licensePlate);
+    if (!car) {
+        throw new Error('Car not found');
     }
+    return car;
+}
 
-    addCar(newCar) {
-        this.data.push(newCar);
-        return newCar;
-    }
-
-    getCarByPlateAndPhone(licensePlate, phoneNumber) {
-        const car = this.data.find(car => car.licensePlate === licensePlate && car.phoneNumber === phoneNumber);
-        if (!car) {
-            throw new Error('Car not found');
-        }
-        return car;
-    }
-
-    deleteCar(id) {
-        const carIndex = this.data.findIndex(car => car.id === id);
-        if (carIndex !== -1) {
-            return this.data.cars.splice(carIndex, 1);
-        } else {
-            throw new Error('Car not found');
-        }
+function deleteCar(id) {
+    const carIndex = data.findIndex(car => car.id === id);
+    if (carIndex !== -1) {
+        data.splice(carIndex, 1);
+    } else {
+        throw new Error('Car not found');
     }
 }
 
-module.exports = new CarsClient();
+module.exports = {
+    getAllCars,
+    updateCar,
+    addCar,
+    getCarByPlateAndPhone,
+    getCarByPlate,
+    deleteCar,
+};

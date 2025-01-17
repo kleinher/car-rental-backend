@@ -1,49 +1,50 @@
 const logger = require('../config/logger');
-const CarsClient = require('../client/CarsClient');
+const { updateCar, getCarByPlateAndPhone } = require('../client/CarsClient');
+const { broadcast } = require('../websocket/WebSocketServer.js');
 
-class UpdateService {
-    constructor() {
-        this.cache = new Map();
-        this.carsClient = CarsClient;
+const cache = new Map();
+
+async function setDataWithCache(phoneNumber, licencePlate) {
+    if (cache.has(phoneNumber)) {
+        logger.info("Cache hit:" + phoneNumber);
+        return;
     }
-
-    async setDataWithCache(phoneNumber, licencePlate) {
-        if (this.cache.has(phoneNumber)) {
-            logger.info("Cache hit:" + phoneNumber);
-            return;
-        }
-
-        logger.info("Cache miss:" + phoneNumber);
-        this.cache.set(phoneNumber, licencePlate);
-    }
-
-    async updateDataWithCache(phoneNumber, message) {
-        if (this.cache.has(phoneNumber)) {
-            logger.info("Cache hit:" + phoneNumber);
-            if (!isNaN(message)) {
-                let car = this.carsClient.getCarByPlateAndPhone(this.cache.get(phoneNumber), phoneNumber);
-
-                if (car.kilometers > message) {
-                    logger.error("Kilometers are not greater than the previous one");
-                    return;
-                }
-
-                car.inMaintenance = (message - car.kilometers) > 10000 ? true : false;
-                car.kilometers = message;
-                car.reminderSent = false;
-                car.reminderSentDate = null;
-                this.cache.delete(phoneNumber);
-
-                CarsClient.updateCar(car);
-                logger.info("Es numero:" + message);
-
-            } else {
-                logger.error("Message is not a number: " + message);
-            }
-            return;
-        }
-        logger.info("Cache miss:" + phoneNumber);
-    }
+    cache.set(phoneNumber, licencePlate);
+    let car = getCarByPlateAndPhone(cache.get(phoneNumber), phoneNumber);
+    car.reminderSent = true;
+    car.reminderSentDate = new Date();
+    updateCar(car);
+    broadcast();
 }
 
-module.exports = new UpdateService();
+async function updateDataWithCache(phoneNumber, message) {
+    if (cache.has(phoneNumber)) {
+        if (!isNaN(message)) {
+            let car = getCarByPlateAndPhone(cache.get(phoneNumber), phoneNumber);
+
+            if (car.kilometers > message) {
+                logger.error("Kilometers are not greater than the previous one");
+                return;
+            }
+
+            car.inMaintenance = (message - car.kilometers) > 10000 ? true : false;
+            car.kilometers = message;
+            car.reminderSent = false;
+            car.reminderSentDate = null;
+            cache.delete(phoneNumber);
+            updateCar(car);
+            broadcast();
+            logger.info("Es numero:" + message);
+
+        } else {
+            logger.error("Message is not a number: " + message);
+        }
+        return;
+    }
+    logger.info("Cache miss:" + phoneNumber);
+}
+
+module.exports = {
+    setDataWithCache,
+    updateDataWithCache
+}
