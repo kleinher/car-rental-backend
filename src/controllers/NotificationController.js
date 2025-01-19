@@ -1,5 +1,5 @@
 const logger = require('../config/logger');
-const { setDataWithCache } = require('../service/UpdateService');
+const { processFirstMessage } = require('../service/UpdateService');
 const { sendNotificationService } = require('../service/NotificationService');
 
 async function sendNotification(req, res) {
@@ -11,7 +11,7 @@ async function sendNotification(req, res) {
         }
 
         await sendNotificationService(number, message);
-        await setDataWithCache(number, licencePlate);
+        await processFirstMessage(number, licencePlate);
 
         res.status(200).json({ success: true, message: 'Notification sent successfully' });
     } catch (error) {

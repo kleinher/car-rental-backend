@@ -7,6 +7,7 @@ async function endMaintenance(licensePlate) {
         throw new Error('Car not found.');
     }
     car.inMaintenance = false;
+    car.lastMaintainance = new Date();
     updateCar(car);
     broadcast();
 }

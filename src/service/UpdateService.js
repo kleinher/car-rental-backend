@@ -1,14 +1,16 @@
 const logger = require('../config/logger');
 const { updateCar, getCarByPlateAndPhone } = require('../client/CarsClient');
 const { broadcast } = require('../websocket/WebSocketServer.js');
+const { handleUserMessage } = require('./gpt/ChatService');
 
-const phoneCache = new Map();
 
+let phoneCache = new Map();
 
-async function setDataWithCache(phoneNumber, licencePlate) {
+async function processFirstMessage(phoneNumber, licencePlate) {
     if (!phoneCache.has(phoneNumber)) {
         phoneCache.set(phoneNumber, new Set());
     }
+
     phoneCache.get(phoneNumber).add(licencePlate);
 
     let car = getCarByPlateAndPhone(licencePlate, phoneNumber);
@@ -19,42 +21,25 @@ async function setDataWithCache(phoneNumber, licencePlate) {
 }
 
 
-async function updateDataWithCache(phoneNumber, message) {
+async function processUserMessage(phoneNumber, message) {
     if (!phoneCache.has(phoneNumber)) {
         logger.info("Cache miss:" + phoneNumber);
         return;
     }
 
-    if (isNaN(message)) {
-        logger.error("Message is not a number: " + message);
-        return;
+    const licencePlate = phoneCache.get(phoneNumber).values().next().value;
+    const result = await handleUserMessage(phoneNumber, licencePlate, message);
+
+    if (result.done) {
+        const licencePlates = phoneCache.get(phoneNumber); // Agrega esto
+        licencePlates.delete(licencePlate); // Corrige este acceso
+        if (licencePlates.size === 0) {
+            phoneCache.delete(phoneNumber); // Remueve el número si ya no hay matrículas
+        }
     }
 
-    let licencePlates = phoneCache.get(phoneNumber);
-    let licencePlate = licencePlates.values().next().value; // Get the first licence plate
-    let car = getCarByPlateAndPhone(licencePlate, phoneNumber);
-
-    if (car.kilometers > message) {
-        logger.error(`Kilometers for ${licencePlate} are not greater than the previous one`);
-        return;
-    }
-
-    car.inMaintenance = (message - car.kilometers) > 10000 ? true : false;
-    car.kilometers = message;
-    car.reminderSent = false;
-    car.reminderSentDate = null;
-    car.lastUpdated = new Date();
-    updateCar(car);
-    broadcast();
-    logger.info(`Updated car with licence plate ${licencePlate} for phone number ${phoneNumber}`);
-
-    licencePlates.delete(licencePlate); // Remove the licence plate from the set
-    if (licencePlates.size === 0) {
-        phoneCache.delete(phoneNumber); // Remove the phone number from the cache if no licence plates are left
-    }
 }
-
 module.exports = {
-    setDataWithCache,
-    updateDataWithCache
-}
+    processUserMessage,
+    processFirstMessage
+};

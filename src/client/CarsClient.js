@@ -32,14 +32,7 @@ function getCarByPlate(licensePlate) {
     return car;
 }
 
-function deleteCar(id) {
-    const carIndex = data.findIndex(car => car.id === id);
-    if (carIndex !== -1) {
-        data.splice(carIndex, 1);
-    } else {
-        throw new Error('Car not found');
-    }
-}
+
 
 module.exports = {
     getAllCars,
@@ -47,5 +40,4 @@ module.exports = {
     addCar,
     getCarByPlateAndPhone,
     getCarByPlate,
-    deleteCar,
 };

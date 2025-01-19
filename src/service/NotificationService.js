@@ -1,10 +1,9 @@
 const logger = require('../config/logger'); // Asegúrate de tener configurado tu logger
 
-const { sendMessage } = require('../client/WhatsappClient');
+const { sendMessage } = require('../client/MessageClient');
 async function sendNotificationService(number, message) {
     try {
-        const chatId = `${number}@c.us`; // Formato de ID de WhatsApp
-        await sendMessage(chatId, message);
+        await sendMessage(number, message);
 
         logger.info('Mensaje enviado:' + message);
     } catch (error) {

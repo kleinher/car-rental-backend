@@ -1,5 +1,4 @@
 const WebSocket = require('ws');
-const carsClient = require('../client/CarsClient')
 const { getAllCars } = require('../client/CarsClient');
 
 wss = null;
@@ -8,8 +7,7 @@ function setWebSocketServer(server) {
     wss = new WebSocket.Server({ server });
 }
 
-function initialize() {
-    // Escuchar conexiones de clientes
+function initializeWebsocket() {
     wss.on('connection', (ws) => {
         console.log('Cliente conectado al WebSocket.');
 
@@ -36,4 +34,4 @@ function broadcast() {
 }
 
 
-module.exports = { broadcast, initialize, setWebSocketServer };
+module.exports = { broadcast, initializeWebsocket, setWebSocketServer };

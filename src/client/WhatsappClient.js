@@ -1,13 +1,16 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const logger = require('../config/logger');
-const { updateDataWithCache } = require('../service/UpdateService');
 
 const client = new Client({
     authStrategy: new LocalAuth(),
+    puppeteer: {
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
 });
 
-function initialize() {
+function initializeWppClient() {
     client.initialize();
 
     client.on('qr', (qr) => {
@@ -15,31 +18,27 @@ function initialize() {
     });
 
     client.on('ready', () => {
-        console.log('Cliente listo');
+        logger.info('Cliente listo');
     });
 
     client.on('auth_failure', (msg) => {
-        console.error('Authentication failure:', msg);
+        logger.error('Authentication failure:', msg);
     });
 
     client.on('disconnected', (reason) => {
-        console.log('Client was logged out', reason);
+        logger.info('Client was logged out', reason);
     });
 
     client.on('error', (error) => {
-        console.error('Client error:', error);
+        logger.info('Client error:', error);
     });
 
     client.on('message', async (message) => {
         const senderNumber = message.from.split('@')[0];
-        updateDataWithCache(senderNumber, message.body);
+        const { processUserMessage } = require('../service/UpdateService'); // Carga diferida
+        await processUserMessage(senderNumber, message.body);
     });
 }
 
-async function sendMessage(number, message) {
-    return client.sendMessage(number, message);
-}
 
-initialize();
-
-module.exports = { client, sendMessage };
+module.exports = { client, initializeWppClient };
