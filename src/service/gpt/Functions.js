@@ -16,7 +16,18 @@ const functions = [
             },
             required: ["kmValidar", "licencePlate"]
         }
+    },
+
+    {
+        name: "doNothing",
+        description: "No hace nada",
+        parameters: {
+            type: "object",
+            properties: {},
+            required: []
+        }
     }
+
 ];
 
 module.exports = { functions };

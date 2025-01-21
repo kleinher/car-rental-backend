@@ -14,28 +14,36 @@ const openai = new OpenAIApi({
 
 const conversationMap = {};
 
-const gptContext =
-    `
-        Eres un asistente que guía la conversación para obtener los km del coche.
-        - Si el usuario proporciona un valor numérico exacto (ej. "12000"), llama a la función "validateKm" con "kmActuales = 12000".
-        - Si el usuario responde que enviará los datos más tarde (ej. "Te lo envío el martes"), responde "Perfecto, espero tu mensaje, gracias".
-        - Si el usuario envía directamente un número (ej. "20000"), llama a la función "validateKm" con "kmActuales = 20000".
-        - Si el usuario no da el dato pero promete enviarlo luego (ej. "Lo reviso y te aviso"), responde "Cuando puedas, por favor mándame los kilómetros".
-        - Si el usuario escribe un valor no estándar (ej. "20k"), interpreta "20k" como 20000 y llama a "validateKm". 
-          Si no es interpretable, solicita una aclaración (ej. "¿Te refieres a [valor numérico] km?").
-        - Si el usuario cambia de tema o no responde, trata de guiarlo a la conversacion.
-        - Si el usuario se niega o no quiere dar la información, lamentalo y termina la conversacion
-        - Si necesita recordarle al usuario la matricula, hazlo.
-        - Valida al final que la matricula del coche sea la correcta. Si no lo es, solicita los km para la matrícula correcta.
-        - Evita hablar de otra cosa que no sea la validación de los km.
-        - Si parece que el usuario no es responsable del coche, dale las gracias y termina la conversación.
-        - No preguntes en que puedo ayudarte
-        - Escribe formal pero amigable.
-        - No cambies la matricula del coche que te interesa.
-        - No cambies el contexto de la conversacion
-        - No seas insistente ni muy repetitivo
-        `
-    ;
+const gptContext = `
+    Eres un asistente diseñado para guiar la conversación y obtener los kilómetros actuales de un coche. Sigue estas pautas:
+
+    1. **Provisión de kilómetros**:
+       - Si el usuario proporciona un valor numérico exacto o estándar (ej. "12000" o "20k"), interpreta correctamente el valor (por ejemplo, "20k" como 20000) y llama a la función "validateKm" con "kmActuales".
+       - Si el valor no es interpretable, solicita una aclaración educada (ej. "¿Te refieres a [valor numérico] km?").
+
+    2. **Si el usuario promete enviar los datos más tarde**:
+       - Responde de forma amable y espera el mensaje (ej. "Perfecto, espero tu mensaje, gracias" o "Cuando puedas, por favor mándame los kilómetros").
+
+    3. **Cambio de tema o falta de respuesta**:
+       - Redirige la conversación hacia la obtención de los kilómetros.
+
+    4. **Negativa o no responsabilidad**:
+       - Si el usuario se niega o aclara que no es responsable del coche, agradece y termina la conversación.
+       - No digas estoy aquí para ayudarte, ya que el usuario no está solicitando ayuda.
+
+    5. **Recordatorios y validaciones**:
+       - Menciona la matrícula del coche si es necesario.
+       - Asegúrate de que los kilómetros proporcionados correspondan a la matrícula correcta.
+
+    6. **Tono y enfoque**:
+       - Mantén un tono formal pero amigable.
+       - No cambies el contexto de la conversación ni la matrícula de interés.
+       - Sé claro, no repetitivo, y evita insistir si el usuario no quiere proporcionar la información.
+       - Usa la function call "sendMessage" para enviar cualquier respuesta al usuario.
+
+    7. **Falta de información**:
+       - Si el mensaje no tiene suficiente contexto, utiliza "doNothing" y espera más información antes de actuar.
+`;
 
 function getConversation(phoneNumber, licencePlate) {
     const key = `${phoneNumber}-${licencePlate}`;
@@ -44,7 +52,7 @@ function getConversation(phoneNumber, licencePlate) {
             {
                 role: "system",
                 content: `${gptContext}
-                         - matricula: ${licencePlate}`
+                         - Mensaje ya enviado: Buenos dias, necesitamos que actualice los kilometros actuales del coche con matricula ${licencePlate}. Por favor, responda con el numero de kilometros actuales.`
             }
         ];
     }
@@ -187,7 +195,7 @@ async function handleUserMessage(phoneNumber, licencePlate, userInput) {
 
     // 3. Llamada a la API de OpenAI
     const gptResponse = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         messages,
         functions: functions
     });
@@ -197,6 +205,10 @@ async function handleUserMessage(phoneNumber, licencePlate, userInput) {
 
     if (choice.finish_reason === "function_call") {
         const { name, arguments } = choice.message.function_call;
+        if (name === "doNothing") {
+            logger.info(`Function call: ${name}`);
+            return { done: false };
+        }
         if (name === "validateKm") {
             const parsed = JSON.parse(arguments);
             logger.info(`Function call: ${name} with arguments: ${JSON.stringify(parsed)}`);
@@ -220,12 +232,16 @@ async function handleUserMessage(phoneNumber, licencePlate, userInput) {
             logger.info(`Kilómetros validados correctamente para ${licencePlate}`);
             return { done: true };
         }
+        if (name === "sendMessage") {
+
+        }
     }
-    // 4. Agregamos la respuesta del asistente al historial
+
     messages.push({
         role: "assistant",
         content: choice.message.content
     });
+
     sendMessage(phoneNumber, choice.message.content);
     logger.info(`Assistant response: ${choice.message.content}`);
     return { done: false };
