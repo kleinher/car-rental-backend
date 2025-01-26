@@ -3,6 +3,7 @@ const logger = require('./src/config/logger');
 const cors = require("cors");
 const router = require('./src/routes/routes');
 const carRouter = require('./src/routes/carRoutes');
+const driverRouter = require('./src/routes/driverRoutes');
 require('dotenv').config();
 
 const http = require('http');
@@ -21,6 +22,7 @@ app.use(cors({
 // Rutas
 app.use('/api/notification', router);
 app.use('/api/car', carRouter); // Se puede cambiar
+app.use('/api/driver', driverRouter); // Se puede cambiar
 
 
 
