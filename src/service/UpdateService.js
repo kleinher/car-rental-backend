@@ -1,7 +1,8 @@
 const logger = require('../config/logger');
-const { updateCar, getCarByPlateAndPhone } = require('../client/CarsClient');
+const { updateCar, getCarByPlate, getAllCars } = require('../client/CarsClient');
 const { broadcast } = require('../websocket/WebSocketServer.js');
 const { handleUserMessage } = require('./gpt/ChatService');
+const { get } = require('../routes/routes.js');
 
 
 let phoneCache = new Map();
@@ -13,11 +14,11 @@ async function processFirstMessage(phoneNumber, licencePlate) {
 
     phoneCache.get(phoneNumber).add(licencePlate);
 
-    let car = getCarByPlateAndPhone(licencePlate, phoneNumber);
+    let car = getCarByPlate(licencePlate);
     car.reminderSent = true;
     car.reminderSentDate = new Date();
     updateCar(car);
-    broadcast();
+    broadcast(getAllCars());
 }
 
 

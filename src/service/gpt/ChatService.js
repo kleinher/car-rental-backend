@@ -1,5 +1,5 @@
 const { functions } = require('./Functions');
-const { updateCar, getCarByPlateAndPhone } = require('../../client/CarsClient');
+const { updateCar, getCarByPlate, getAllCars } = require('../../client/CarsClient');
 const { sendMessage } = require('../../client/MessageClient');
 const { broadcast } = require('../../websocket/WebSocketServer.js');
 const logger = require('../../config/logger');
@@ -26,6 +26,7 @@ const gptContext = `
 
     3. **Cambio de tema o falta de respuesta**:
        - Redirige la conversación hacia la obtención de los kilómetros.
+       - Si el usuario te escribe sobre otra cose, redirige la conversacion para obtener los kilometros
 
     4. **Negativa o no responsabilidad**:
        - Si el usuario se niega o aclara que no es responsable del coche, agradece y termina la conversación.
@@ -38,11 +39,11 @@ const gptContext = `
     6. **Tono y enfoque**:
        - Mantén un tono formal pero amigable.
        - No cambies el contexto de la conversación ni la matrícula de interés.
-       - Sé claro, no repetitivo, y evita insistir si el usuario no quiere proporcionar la información.
+       - Sé claro, no repetitivo.
        - Usa la function call "sendMessage" para enviar cualquier respuesta al usuario.
 
     7. **Falta de información**:
-       - Si el mensaje no tiene suficiente contexto, utiliza "doNothing" y espera más información antes de actuar.
+       - Si el mensaje no tiene suficiente contexto, utiliza "doNothing". Ej: El usuario escribe solo "Hola"
 `;
 
 function getConversation(phoneNumber, licencePlate) {
@@ -76,7 +77,7 @@ function validateKm(licencePlate, phoneNumber, kmValidar) {
     updateCarData(car, kmValidar, newDailyUsage, predictedDate);
 
     // 5. Notificar y retornar resultado
-    broadcast();
+    broadcast(getAllCars());
     logger.info(`Updated car with plate ${licencePlate} to ${kmValidar} km`);
     return { result: "Ok, km validados" };
 }
@@ -88,8 +89,8 @@ function validateKm(licencePlate, phoneNumber, kmValidar) {
  *   - Busca el coche por patente y teléfono.
  *   - Lanza un error si no existe.
  */
-function checkCarExists(licencePlate, phoneNumber) {
-    const car = getCarByPlateAndPhone(licencePlate, phoneNumber);
+function checkCarExists(licencePlate) {
+    const car = getCarByPlate(licencePlate);
     if (!car) {
         const err = `No se encontró el coche con patente ${licencePlate}.`;
         logger.error(err);

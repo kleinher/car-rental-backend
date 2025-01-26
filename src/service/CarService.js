@@ -1,5 +1,5 @@
 const { broadcast } = require('../websocket/WebSocketServer.js');
-
+const { getAllCars } = require('../client/CarsClient.js');
 const { getCarByPlate, updateCar } = require('../client/CarsClient');
 async function endMaintenance(licensePlate) {
     const car = getCarByPlate(licensePlate);
@@ -9,7 +9,8 @@ async function endMaintenance(licensePlate) {
     car.inMaintenance = false;
     car.lastMaintainance = new Date();
     updateCar(car);
-    broadcast();
+
+    broadcast(getAllCars());
 }
 
 module.exports = { endMaintenance };

@@ -1,9 +1,18 @@
 const initialCars = require('../resources/data.js');
+const drivers = require('../resources/drivers.js');
 let data = initialCars;
 
 
 function getAllCars() {
-    return data;
+    return data.map(car => {
+        const driver = drivers.find(driver => driver.id === car.driverId);
+        return {
+            ...car,
+            driver: driver.name,
+            phoneNumber: driver.phoneNumber,
+
+        };
+    });
 }
 
 function updateCar(car) {
