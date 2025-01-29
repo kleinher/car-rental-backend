@@ -1,7 +1,10 @@
 const DriverClient = require('../client/DriverClient');
+const DriverRepository = require('../repository/DriverRepository');
+
+
 
 const getAllDrivers = async () => {
-    return await DriverClient.getAllDrivers();
+    return await DriverRepository.getAllDrivers();
 };
 
 const getDriverById = async (driverId) => {
@@ -9,7 +12,7 @@ const getDriverById = async (driverId) => {
 };
 
 const createDriver = async (driverData) => {
-    return await DriverClient.addDriver(driverData);
+    return await DriverRepository.createDriver(driverData);
 };
 
 const updateDriver = async (driver) => {

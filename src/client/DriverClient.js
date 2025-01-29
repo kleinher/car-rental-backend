@@ -1,6 +1,8 @@
 const initialDrivers = require('../resources/drivers.js');
+
 let data = initialDrivers;
 
+idMax = 6;
 function getAllDrivers() {
     return data;
 }
@@ -14,7 +16,8 @@ function updateDriver(driver) {
 }
 
 function addDriver(newDriver) {
-    data.push(newDriver);
+    idMax++;
+    data.push({ id: idMax, ...newDriver });
     return newDriver;
 }
 

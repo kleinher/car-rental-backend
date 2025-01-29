@@ -27,8 +27,10 @@ module.exports = {
         try {
             const driver = {
                 name: req.body.name,
-                licenseNumber: req.body.licenseNumber,
-                vehicle: req.body.vehicle
+                phoneNumber: req.body.phoneNumber,
+                latitude: req.body.latitude,
+                longitude: req.body.longitude,
+
             };
             await DriverService.createDriver(driver);
             res.status(201).json(driver);

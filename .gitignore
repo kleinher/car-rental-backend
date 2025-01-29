@@ -69,3 +69,4 @@ temp/
 .wwebjs_auth/
 .wwebjs_cache/
 package-lock.json
+database.sqlite
