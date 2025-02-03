@@ -1,6 +1,7 @@
 // models/Driver.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
+const logger = require('../config/logger');
 
 const Driver = sequelize.define('Driver', {
     name: {
@@ -22,15 +23,13 @@ const Driver = sequelize.define('Driver', {
 }, {
     timestamps: true,
 });
-// Agregar un método personalizado "agregar" a la instancia
 Driver.prototype.agregar = async function () {
     try {
-        // Si la instancia no está persistida, se crea en la base de datos
         const nuevoDriver = await this.save();
-        console.log('Driver agregado a la base de datos:', nuevoDriver);
-        return nuevoDriver;
+        logger.info('Driver agregado a la base de datos:', nuevoDriver.id);
+        return nuevoDriver.id;
     } catch (error) {
-        console.error('Error al agregar el driver:', error);
+        logger.error('Error al agregar el driver:', error);
         throw error;
     }
 };

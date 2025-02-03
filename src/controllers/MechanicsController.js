@@ -1,4 +1,5 @@
 const { agregarDB } = require('../service/GenericService.js');
+const MechanicService = require('../service/MechanicService.js');
 const Mechanic = require('../models/Mechanic.js');
 module.exports = {
     async getMechanics(req, res) {

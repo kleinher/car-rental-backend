@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
+const logger = require('../config/logger');
 
 const Mechanic = sequelize.define('Mechanic', {
     name: {
@@ -29,10 +30,10 @@ const Mechanic = sequelize.define('Mechanic', {
 Mechanic.prototype.agregar = async function () {
     try {
         const newMechanic = await this.save();
-        console.log('Driver agregado a la base de datos:', newMechanic);
+        logger.info('Driver agregado a la base de datos:', newMechanic);
         return newMechanic.id;
     } catch (error) {
-        console.error('Error al agregar el driver:', error);
+        logger.error('Error al agregar el driver:', error);
         throw error;
     }
 };
