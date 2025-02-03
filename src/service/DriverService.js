@@ -1,14 +1,11 @@
-const DriverClient = require('../client/DriverClient');
 const DriverRepository = require('../repository/DriverRepository');
-
-
 
 const getAllDrivers = async () => {
     return await DriverRepository.getAllDrivers();
 };
 
 const getDriverById = async (driverId) => {
-    return await DriverClient.findById(driverId);
+    return await DriverRepository.findById(driverId);
 };
 
 const createDriver = async (driverData) => {
@@ -16,11 +13,11 @@ const createDriver = async (driverData) => {
 };
 
 const updateDriver = async (driver) => {
-    return await DriverClient.updateDriver(driver);
+    return await DriverRepository.updateDriver(driver);
 };
 
 const deleteDriver = async (driverId) => {
-    return await DriverClient.deleteDriver(driverId);
+    return await DriverRepository.deleteDriver(driverId);
 };
 
 module.exports = {

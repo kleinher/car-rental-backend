@@ -1,9 +1,12 @@
-// models/Driver.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
 
-const Driver = sequelize.define('Driver', {
+const Mechanic = sequelize.define('Mechanic', {
     name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    address: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -22,17 +25,16 @@ const Driver = sequelize.define('Driver', {
 }, {
     timestamps: true,
 });
-// Agregar un método personalizado "agregar" a la instancia
-Driver.prototype.agregar = async function () {
+
+Mechanic.prototype.agregar = async function () {
     try {
-        // Si la instancia no está persistida, se crea en la base de datos
-        const nuevoDriver = await this.save();
-        console.log('Driver agregado a la base de datos:', nuevoDriver);
-        return nuevoDriver;
+        const newMechanic = await this.save();
+        console.log('Driver agregado a la base de datos:', newMechanic);
+        return newMechanic.id;
     } catch (error) {
         console.error('Error al agregar el driver:', error);
         throw error;
     }
 };
 
-module.exports = Driver;
+module.exports = Mechanic;

@@ -1,5 +1,6 @@
 const Driver = require('../models/Driver.js');
 const DriverService = require('../service/DriverService.js');
+const { agregarDB } = require('../service/GenericService.js');
 
 module.exports = {
     async getDrivers(req, res) {
@@ -32,7 +33,10 @@ module.exports = {
                 longitude: req.body.longitude,
 
             };
-            await DriverService.createDriver(driver);
+
+            const nuevoDriver = Driver.build(driver);
+            await agregarDB(nuevoDriver);
+
             res.status(201).json(driver);
         } catch (error) {
             res.status(500).json({ error: 'An error occurred while creating the driver' });

@@ -1,13 +1,12 @@
-// models/Driver.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
 
-const Driver = sequelize.define('Driver', {
-    name: {
+const Car = sequelize.define('Car', {
+    licencePlate: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    phoneNumber: {
+    kilometers: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -19,20 +18,26 @@ const Driver = sequelize.define('Driver', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    driverId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Drivers',
+            key: 'id',
+        },
+        allowNull: true,
+    },
 }, {
     timestamps: true,
 });
-// Agregar un método personalizado "agregar" a la instancia
-Driver.prototype.agregar = async function () {
+Car.prototype.agregar = async function () {
     try {
-        // Si la instancia no está persistida, se crea en la base de datos
-        const nuevoDriver = await this.save();
-        console.log('Driver agregado a la base de datos:', nuevoDriver);
-        return nuevoDriver;
+        const newCar = await this.save();
+        console.log('Driver agregado a la base de datos:', newCar);
+        return newCar;
     } catch (error) {
         console.error('Error al agregar el driver:', error);
         throw error;
     }
 };
 
-module.exports = Driver;
+module.exports = Car;
