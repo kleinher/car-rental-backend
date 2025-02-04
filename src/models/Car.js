@@ -18,6 +18,14 @@ const Car = sequelize.define('Car', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    estMaintainance: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    lastUpdate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
     driverId: {
         type: DataTypes.INTEGER,
         references: {

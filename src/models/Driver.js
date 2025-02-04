@@ -12,6 +12,10 @@ const Driver = sequelize.define('Driver', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     latitude: {
         type: DataTypes.FLOAT,
         allowNull: false,
@@ -23,6 +27,7 @@ const Driver = sequelize.define('Driver', {
 }, {
     timestamps: true,
 });
+
 Driver.prototype.agregar = async function () {
     try {
         const nuevoDriver = await this.save();

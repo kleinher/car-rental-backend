@@ -1,5 +1,6 @@
 const Driver = require('../models/Driver.js');
 const DriverService = require('../service/DriverService.js');
+const DriverRepository = require('../repository/DriverRepository.js');
 const { agregarDB } = require('../service/GenericService.js');
 
 module.exports = {
@@ -29,15 +30,15 @@ module.exports = {
             const driver = {
                 name: req.body.name,
                 phoneNumber: req.body.phoneNumber,
+                address: req.body.address,
                 latitude: req.body.latitude,
                 longitude: req.body.longitude,
-
             };
 
             const nuevoDriver = Driver.build(driver);
-            await agregarDB(nuevoDriver);
+            const id = await agregarDB(nuevoDriver);
 
-            res.status(201).json(driver);
+            res.status(201).json(id);
         } catch (error) {
             res.status(500).json({ error: 'An error occurred while creating the driver' });
         }
@@ -45,7 +46,7 @@ module.exports = {
 
     async updateDriver(req, res) {
         try {
-            const driver = await Driver.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const driver = await DriverRepository.updateDriver(req.params.id, req.body, { new: true });
             if (!driver) {
                 return res.status(404).json({ error: 'Driver not found' });
             }
@@ -57,7 +58,7 @@ module.exports = {
 
     async deleteDriver(req, res) {
         try {
-            const driver = await Driver.findByIdAndDelete(req.params.id);
+            const driver = await DriverRepository.deleteDriver(req.params.id);
             if (!driver) {
                 return res.status(404).json({ error: 'Driver not found' });
             }

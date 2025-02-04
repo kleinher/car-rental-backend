@@ -5,7 +5,7 @@ const getAllMechanics = async () => {
 };
 
 const getMechanicById = async (mechanicId) => {
-    return await MechanicClient.findById(mechanicId);
+    return await MechanicRepository.findById(mechanicId);
 };
 
 const createMechanic = async (mechanicData) => {
@@ -13,11 +13,11 @@ const createMechanic = async (mechanicData) => {
 };
 
 const updateMechanic = async (mechanic) => {
-    return await MechanicClient.updateMechanic(mechanic);
+    return await MechanicRepository.updateMechanic(mechanic);
 };
 
 const deleteMechanic = async (mechanicId) => {
-    return await MechanicClient.deleteMechanic(mechanicId);
+    return await MechanicRepository.deleteMechanic(mechanicId);
 };
 
 module.exports = {
