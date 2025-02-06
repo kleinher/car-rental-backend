@@ -12,6 +12,12 @@ const initialCars = [
         lastMaintainance: "2024-01-01",
         dailyUsage: 0,
         estMaintainance: null,
+        address: {
+            street: "123 Main St",
+            city: "Springfield",
+            latitude: 38.89511,
+            longitude: -77.03637
+        },
     },
     {
         id: 2,
@@ -26,6 +32,12 @@ const initialCars = [
         lastMaintainance: "2024-01-01",
         dailyUsage: 0,
         estMaintainance: null,
+        address: {
+            street: "456 Elm St",
+            city: "Springfield",
+            latitude: 38.89511,
+            longitude: -77.03637
+        },
     },
     {
         id: 3,
@@ -40,6 +52,12 @@ const initialCars = [
         lastMaintainance: null,
         dailyUsage: 0,
         estMaintainance: null,
+        address: {
+            street: "789 Oak St",
+            city: "Springfield",
+            latitude: 38.89511,
+            longitude: -77.03637
+        },
     },
     {
         id: 4,
@@ -54,8 +72,39 @@ const initialCars = [
         lastMaintainance: null,
         dailyUsage: 0,
         estMaintainance: null,
+        address: {
+            street: "101 Maple St",
+            city: "Springfield",
+            latitude: 38.89511,
+            longitude: -77.03637
+        },
     },
-];
-
-module.exports = initialCars;
-
+    {
+        id: 5,
+        model: "Seat Ibiza",
+        driverId: 5,
+        kilometers: 5000,
+        lastUpdated: "2025-01-02",
+        licensePlate: "MNO345",
+        reminderSent: false,
+        reminderSentDate: null,
+        inMaintenance: false,
+        lastMaintainance: null,
+        dailyUsage: 0,
+        estMaintainance: null,
+        address: {
+            street: "Carrer de sa Drassaneta",
+            city: "Ibiza",
+            latitude: 38.90883,
+            longitude: 1.43296
+        },
+    },
+    {
+        id: 6,
+        model: "Seat Leon",
+        driverId: 6,
+        kilometers: 10000,
+        lastUpdated: "2025-01-01",
+        licensePlate: "PQR678",
+        reminderSent: false,
+        reminderSentDate:

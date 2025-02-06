@@ -7,8 +7,12 @@ const Mechanic = sequelize.define('Mechanic', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    address: {
-        type: DataTypes.STRING,
+    addressId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Addresses',
+            key: 'id',
+        },
         allowNull: false,
     },
     phoneNumber: {

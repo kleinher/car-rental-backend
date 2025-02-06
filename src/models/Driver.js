@@ -12,8 +12,12 @@ const Driver = sequelize.define('Driver', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    address: {
-        type: DataTypes.STRING,
+    addressId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Addresses',
+            key: 'id',
+        },
         allowNull: false,
     },
     latitude: {
