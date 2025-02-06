@@ -22,6 +22,7 @@
     "qrcode-terminal": "^0.12.0",
     "sequelize": "^6.37.5",
     "sqlite3": "^5.1.7",
+    "supertest": "^7.0.0",
     "whatsapp-web.js": "^1.26.0",
     "winston": "^3.17.0",
     "ws": "^8.18.0"

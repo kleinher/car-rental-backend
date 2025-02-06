@@ -1,6 +1,20 @@
 const express = require('express');
 const carRouter = express.Router();
-const { carEndMaintenance } = require('../controllers/CarsController');
+const {
+    carEndMaintenance,
+    createCarHandler,
+    updateCarHandler,
+    deleteCarHandler,
+    getCarHandler
+} = require('../controllers/CarsController');
 
-carRouter.post('/maintainance/end', (req, res) => carEndMaintenance(req, res));
+// Maintenance endpoint
+carRouter.post('/maintainance/end', carEndMaintenance);
+
+// CRUD endpoints
+carRouter.post('/', createCarHandler);
+carRouter.put('/:id', updateCarHandler);
+carRouter.delete('/:id', deleteCarHandler);
+carRouter.get('/:id', getCarHandler);
+
 module.exports = carRouter;

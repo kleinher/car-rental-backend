@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
+const logger = require('../config/logger');
 
 const Car = sequelize.define('Car', {
     licencePlate: {
@@ -8,7 +9,7 @@ const Car = sequelize.define('Car', {
     },
     kilometers: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     latitude: {
         type: DataTypes.FLOAT,
@@ -16,6 +17,10 @@ const Car = sequelize.define('Car', {
     },
     longitude: {
         type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    address: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
     estMaintainance: {
@@ -34,18 +39,17 @@ const Car = sequelize.define('Car', {
         },
         allowNull: true,
     },
+    inMaintenance: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    lastMaintainance: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
 }, {
     timestamps: true,
 });
-Car.prototype.agregar = async function () {
-    try {
-        const newCar = await this.save();
-        console.log('Driver agregado a la base de datos:', newCar);
-        return newCar;
-    } catch (error) {
-        console.error('Error al agregar el driver:', error);
-        throw error;
-    }
-};
 
 module.exports = Car;
