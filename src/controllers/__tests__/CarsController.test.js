@@ -149,4 +149,53 @@ describe('CarsController', () => {
             expect(response.body.error).toBe('Car not found');
         });
     });
+
+    describe('GET /cars', () => {
+        it('should get all cars successfully', async () => {
+            const mockCars = [
+                {
+                    id: 1,
+                    licencePlate: 'ABC123',
+                    kilometers: '50000',
+                    latitude: -34.603722,
+                    longitude: -58.381592,
+                    address: 'Test Address 123',
+                    estMaintainance: '2023-12-31',
+                    driverId: 1,
+                    inMaintenance: false,
+                    lastUpdate: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    licencePlate: 'XYZ789',
+                    kilometers: '30000',
+                    latitude: -34.603722,
+                    longitude: -58.381592,
+                    address: 'Test Address 456',
+                    estMaintainance: '2023-12-31',
+                    driverId: 2,
+                    inMaintenance: false,
+                    lastUpdate: new Date().toISOString()
+                }
+            ];
+
+            CarService.getAllCars.mockResolvedValue(mockCars);
+
+            const response = await request(app)
+                .get('/cars');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(mockCars);
+        });
+
+        it('should handle errors when getting all cars', async () => {
+            CarService.getAllCars.mockRejectedValue(new Error('Database error'));
+
+            const response = await request(app)
+                .get('/cars');
+
+            expect(response.status).toBe(500);
+            expect(response.body.error).toBe('Database error');
+        });
+    });
 });

@@ -5,11 +5,15 @@ const {
     createCarHandler,
     updateCarHandler,
     deleteCarHandler,
-    getCarHandler
+    getCarHandler,
+    getAllCarsHandler
 } = require('../controllers/CarsController');
 
 // Maintenance endpoint
 carRouter.post('/maintainance/end', carEndMaintenance);
+
+// Add this new route
+carRouter.get('/', getAllCarsHandler);
 
 // CRUD endpoints
 carRouter.post('/', createCarHandler);

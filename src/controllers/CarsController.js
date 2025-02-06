@@ -20,6 +20,7 @@ async function carEndMaintenance(req, res) {
     }
 }
 
+
 async function createCarHandler(req, res) {
     const { licencePlate, kilometers, latitude, longitude, address,
         estMaintainance, driverId, inMaintenance } = req.body;
@@ -97,10 +98,21 @@ async function getCarHandler(req, res) {
     }
 }
 
+async function getAllCarsHandler(req, res) {
+    try {
+        const cars = await CarService.getAllCars();
+        res.status(200).json(cars);
+    } catch (error) {
+        logger.error('Error getting all cars:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     carEndMaintenance,
     createCarHandler,
     updateCarHandler,
     deleteCarHandler,
-    getCarHandler
+    getCarHandler,
+    getAllCarsHandler  // Add this to exports
 };
