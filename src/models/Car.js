@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
-const logger = require('../config/logger');
+const Address = require('./Address');
 
-const Car = sequelize.define('Car', {
+const Car = sequelize.define('Cars', {
     licencePlate: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -11,17 +11,15 @@ const Car = sequelize.define('Car', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    latitude: {
-        type: DataTypes.FLOAT,
+    addressId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'addresses',
+            key: 'id'
+        },
         allowNull: false,
-    },
-    longitude: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
-    address: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
     },
     estMaintainance: {
         type: DataTypes.DATE,
@@ -34,10 +32,12 @@ const Car = sequelize.define('Car', {
     driverId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'Drivers',
+            model: 'drivers',
             key: 'id',
         },
         allowNull: true,
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     },
     inMaintenance: {
         type: DataTypes.BOOLEAN,
@@ -50,6 +50,15 @@ const Car = sequelize.define('Car', {
     },
 }, {
     timestamps: true,
+    indexes: [
+        { fields: ['addressId'] },
+        { fields: ['driverId'] }
+    ]
+});
+
+Car.belongsTo(Address, {
+    foreignKey: 'addressId',
+    as: 'address'
 });
 
 module.exports = Car;

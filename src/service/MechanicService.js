@@ -12,8 +12,8 @@ const createMechanic = async (mechanicData) => {
     return await MechanicRepository.createMechanic(mechanicData);
 };
 
-const updateMechanic = async (mechanic) => {
-    return await MechanicRepository.updateMechanic(mechanic);
+const updateMechanic = async (id, mechanic) => {
+    return await MechanicRepository.updateMechanic(id, mechanic);
 };
 
 const deleteMechanic = async (mechanicId) => {

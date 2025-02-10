@@ -1,19 +1,10 @@
 const Car = require('../models/Car');
-const Address = require('../models/Address');
 const logger = require('../config/logger');
 
 class CarRepository {
     async create(carData) {
         try {
-            const address = await Address.create(carData.address);
-            const car = await Car.create({
-                ...carData,
-                addressId: address.id,
-                lastUpdate: new Date(),
-                inMaintenance: carData.inMaintenance || false
-            });
-
-            return car;
+            return await Car.create(carData);
         } catch (error) {
             logger.error('Error creating car:', error);
             throw error;
