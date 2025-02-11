@@ -5,6 +5,8 @@ const router = require('./src/routes/routes');
 const carRouter = require('./src/routes/carRoutes');
 const driverRouter = require('./src/routes/driverRoutes');
 const mechanicRoutes = require('./src/routes/mechanicRoutes');
+const { initializeWppClient } = require('./src/client/WhatsappClient');
+
 require('dotenv').config();
 
 const http = require('http');

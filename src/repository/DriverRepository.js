@@ -1,4 +1,4 @@
-const sequelize = require('../config/sequialize');
+const sequelize = require('../config/sequelize');
 const Driver = require('../models/Driver');
 
 const createDriver = async (driver) => {

@@ -1,4 +1,4 @@
-const sequelize = require('../config/sequialize');
+const sequelize = require('../config/sequelize');
 const Mechanic = require('../models/Mechanic');
 
 const createMechanic = async (mechanic) => {

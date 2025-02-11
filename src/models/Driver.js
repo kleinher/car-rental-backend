@@ -1,5 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/sequialize');
+const sequelize = require('../config/sequelize');
 const Address = require('./Address');
 
 class Driver extends Model { }
