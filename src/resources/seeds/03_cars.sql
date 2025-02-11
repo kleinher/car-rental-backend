@@ -13,7 +13,7 @@ INSERT INTO cars (
 VALUES (
         'ABC1234',
         '50000',
-        1,
+        5,
         '2024-03-15',
         CURRENT_TIMESTAMP,
         1,
@@ -25,7 +25,7 @@ VALUES (
     (
         'XYZ9876',
         '35000',
-        2,
+        6,
         '2024-02-20',
         CURRENT_TIMESTAMP,
         2,
@@ -37,7 +37,7 @@ VALUES (
     (
         'DEF5678',
         '62000',
-        3,
+        7,
         '2024-04-01',
         CURRENT_TIMESTAMP,
         NULL,

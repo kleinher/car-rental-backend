@@ -8,14 +8,14 @@ INSERT INTO drivers (
 VALUES (
         'John Driver',
         '+1234567890',
-        1,
+        3,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     ),
     (
         'Jane Driver',
         '+1987654321',
-        2,
+        4,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     );
