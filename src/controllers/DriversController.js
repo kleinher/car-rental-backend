@@ -2,6 +2,7 @@ const Driver = require('../models/Driver.js');
 const DriverService = require('../service/DriverService.js');
 const DriverRepository = require('../repository/DriverRepository.js');
 const { agregarDB } = require('../service/GenericService.js');
+const logger = require('../config/logger.js');
 
 module.exports = {
     async getDrivers(req, res) {
@@ -9,6 +10,7 @@ module.exports = {
             const drivers = await DriverService.getAllDrivers();
             res.status(200).json(drivers);
         } catch (error) {
+            logger.error(error)
             res.status(500).json({ error: 'An error occurred while fetching drivers' });
         }
     },

@@ -1,6 +1,6 @@
-const drivers = require('../resources/drivers.js');
 const CarRepository = require('../repositories/CarRepository.js');
 const Driver = require('../models/Driver.js');
+const Address = require('../models/Address.js');
 
 async function getAllCars() {
     let cars = await CarRepository.getAll(
@@ -14,21 +14,13 @@ async function getAllCars() {
                 {
                     model: Driver,
                     as: 'driver',
-                    attributes: ['formattedAddress']
+                    attributes: ['name']
                 },
 
             ]
         }
     );
-    cars = cars.map(car => ({
-        id: car.id,
-        licencePlate: car.licencePlate,
-        kilometers: car.kilometers,
-        estMaintainance: car.estMaintainance,
-        lastUpdate: car.lastUpdate,
-        inMaintenance: car.inMaintenance,
-        lastMaintainance: car.lastMaintainance,
-    }));
+
     return cars
 }
 

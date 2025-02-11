@@ -1,5 +1,6 @@
 const sequelize = require('../config/sequelize');
 const Driver = require('../models/Driver');
+const Address = require('../models/Address');
 
 const createDriver = async (driver) => {
     await sequelize.sync();
@@ -7,16 +8,18 @@ const createDriver = async (driver) => {
 }
 
 const getAllDrivers = async () => {
-    await sequelize.sync();
-    return await Driver.findAll({
+    const drivers = await Driver.findAll({
         include: [
             {
                 model: Address,
                 as: 'address',
-                attributes: ['formattedAddress']
-            }]
-    }
-    );
+                attributes: ['formattedAddress'] // Solo traer el nombre de la dirección
+            }
+        ],
+        attributes: ['id', 'name', 'phoneNumber'] // Datos de Driver que quieres mostrar
+    });
+
+    return drivers;
 }
 
 const getDriverById = async (id) => {
