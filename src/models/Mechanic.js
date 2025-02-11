@@ -1,8 +1,10 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequialize');
-const logger = require('../config/logger');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
+const Address = require('./Address');
 
-const Mechanic = sequelize.define('mechanics', {
+class Mechanic extends Model { }
+
+Mechanic.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -10,7 +12,7 @@ const Mechanic = sequelize.define('mechanics', {
     addressId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'Addresses',
+            model: 'addresses',
             key: 'id',
         },
         allowNull: false,
@@ -26,10 +28,20 @@ const Mechanic = sequelize.define('mechanics', {
     longitude: {
         type: DataTypes.FLOAT,
         allowNull: false,
-    },
+    }
 }, {
+    sequelize,
+    modelName: 'Mechanic',
+    tableName: 'mechanics',
     timestamps: true,
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
 });
 
+// Relación con Address
+Mechanic.belongsTo(Address, {
+    foreignKey: 'addressId',
+    as: 'address',
+});
 
 module.exports = Mechanic;
