@@ -1,29 +1,37 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
+const Driver = require('./Driver'); // Importar aquí después de definir Driver
 
-const Address = sequelize.define('Address', {
-    street: {
+class Address extends Model { }
+
+Address.init({
+    formattedAddress: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    city: {
-        type: DataTypes.STRING,
-        allowNull: false
+    latitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
     },
-    state: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    zipCode: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    country: {
-        type: DataTypes.STRING,
-        allowNull: false
+    longitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
     }
 }, {
-    timestamps: true
+    sequelize,
+    modelName: 'Address',
+    tableName: 'addresses',
+    timestamps: false
+});
+
+Driver.hasOne(Address, {
+    foreignKey: 'addressId',
+    as: 'address'
+});
+
+Address.belongsTo(Driver, {
+    foreignKey: 'addressId',
+    as: 'driver'
 });
 
 module.exports = Address;

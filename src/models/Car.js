@@ -1,8 +1,11 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
-const logger = require('../config/logger');
+const Address = require('./Address');
+const Driver = require('./Driver');
 
-const Car = sequelize.define('Car', {
+class Car extends Model { }
+
+Car.init({
     licencePlate: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -11,21 +14,15 @@ const Car = sequelize.define('Car', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    latitude: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
-    longitude: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
-    addressId: {
+    addressId: {  // FK correcta hacia Address
         type: DataTypes.INTEGER,
         references: {
-            model: 'Addresses',
-            key: 'id',
+            model: 'addresses',
+            key: 'id'
         },
         allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
     },
     estMaintainance: {
         type: DataTypes.DATE,
@@ -35,13 +32,14 @@ const Car = sequelize.define('Car', {
         type: DataTypes.DATE,
         allowNull: true,
     },
-    driverId: {
+    driverId: {  // FK correcta hacia Driver
         type: DataTypes.INTEGER,
         references: {
-            model: 'Drivers',
+            model: 'drivers',
             key: 'id',
         },
         allowNull: true,
+        onDelete: 'SET NULL'
     },
     inMaintenance: {
         type: DataTypes.BOOLEAN,
@@ -53,7 +51,25 @@ const Car = sequelize.define('Car', {
         allowNull: true
     },
 }, {
+    sequelize,
+    modelName: 'Car',
+    tableName: 'cars',
     timestamps: true,
+    indexes: [
+        { fields: ['addressId'] },
+        { fields: ['driverId'] }
+    ]
+});
+
+// Relaciones corregidas
+Car.belongsTo(Address, {
+    foreignKey: 'addressId',
+    as: 'address'
+});
+
+Car.belongsTo(Driver, {
+    foreignKey: 'driverId',  // ✅ Clave foránea correcta
+    as: 'driver'
 });
 
 module.exports = Car;

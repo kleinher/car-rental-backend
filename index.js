@@ -9,7 +9,6 @@ require('dotenv').config();
 
 const http = require('http');
 const { setWebSocketServer, initializeWebsocket } = require('./src/websocket/WebSocketServer');
-const { initializeWppClient } = require('./src/client/WhatsappClient');
 const app = express();
 
 // Middleware

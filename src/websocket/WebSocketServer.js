@@ -8,11 +8,13 @@ function setWebSocketServer(server) {
 }
 
 function initializeWebsocket() {
-    wss.on('connection', (ws) => {
+    wss.on('connection', async (ws) => {
         console.log('Cliente conectado al WebSocket.');
 
         // Enviar datos iniciales al cliente
-        ws.send(JSON.stringify({ type: 'cars', cars: getAllCars() }));
+        const cars = await getAllCars()
+        const datos = JSON.stringify({ type: 'cars', cars: cars })
+        ws.send(datos);
         if (isClientReady) {
             ws.send(JSON.stringify({ type: 'validated', value: true }));
         }
