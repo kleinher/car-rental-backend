@@ -3,6 +3,7 @@ const DriverService = require('../service/DriverService.js');
 const DriverRepository = require('../repository/DriverRepository.js');
 const { agregarDB } = require('../service/GenericService.js');
 const logger = require('../config/logger.js');
+const Address = require('../models/Address.js');
 
 module.exports = {
     async getDrivers(req, res) {
@@ -29,18 +30,22 @@ module.exports = {
 
     async createDriver(req, res) {
         try {
+
+            const address = {
+                formattedAddress: req.body.address,
+                latitude: req.body.latitude,
+                longitude: req.body.longitude,
+            }
+            const driverAddress = await Address.create(address)
+
             const driver = {
                 name: req.body.name,
                 phoneNumber: req.body.phoneNumber,
-                address: req.body.address,
-                latitude: req.body.latitude,
-                longitude: req.body.longitude,
+                addressId: driverAddress.id
             };
+            const nuevoDriver = await Driver.create(driver);
 
-            const nuevoDriver = Driver.build(driver);
-            const id = await agregarDB(nuevoDriver);
-
-            res.status(201).json(id);
+            res.status(201).json(nuevoDriver.id);
         } catch (error) {
             res.status(500).json({ error: 'An error occurred while creating the driver' });
         }
