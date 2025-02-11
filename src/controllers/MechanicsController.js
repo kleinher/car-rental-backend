@@ -1,12 +1,24 @@
 const { agregarDB } = require('../service/GenericService.js');
 const MechanicService = require('../service/MechanicService.js');
 const Mechanic = require('../models/Mechanic.js');
+const Address = require('../models/Address.js')
+const logger = require('../config/logger.js')
 module.exports = {
     async getMechanics(req, res) {
         try {
-            const mechanics = await MechanicService.getAllMechanics();
+            const mechanics = await Mechanic.findAll({
+                include: [
+                    {
+                        model: Address,
+                        as: 'address',
+                        attributes: ['formattedAddress'] // Solo traer el nombre de la dirección
+                    }
+                ],
+                attributes: ['id', 'name', 'phoneNumber'] // Datos de Driver que quieres mostrar
+            });
             res.status(200).json(mechanics);
         } catch (error) {
+            logger.error('Error al obtener los mecanicos' + error)
             res.status(500).json({ error: 'An error occurred while fetching mechanics' });
         }
     },
@@ -25,12 +37,17 @@ module.exports = {
 
     async createMechanic(req, res) {
         try {
+            const address = {
+                formattedAddress: req.body.address,
+                latitude: req.body.latitude,
+                longitude: req.body.longitude,
+            }
+            const driverAddress = await Address.create(address)
+
             const mechanic = {
                 name: req.body.name,
                 phoneNumber: req.body.phoneNumber,
-                address: req.body.address,
-                latitude: req.body.latitude,
-                longitude: req.body.longitude,
+                addressId: driverAddress.id
             };
 
             const nuevoMechanic = Mechanic.build(mechanic);

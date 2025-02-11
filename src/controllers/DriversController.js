@@ -8,7 +8,17 @@ const Address = require('../models/Address.js');
 module.exports = {
     async getDrivers(req, res) {
         try {
-            const drivers = await DriverService.getAllDrivers();
+            const drivers = await Driver.findAll({
+                include: [
+                    {
+                        model: Address,
+                        as: 'address',
+                        attributes: ['formattedAddress'] // Solo traer el nombre de la dirección
+                    }
+                ],
+                attributes: ['id', 'name', 'phoneNumber'] // Datos de Driver que quieres mostrar
+            });
+
             res.status(200).json(drivers);
         } catch (error) {
             logger.error("Error al obtener los conductores " + error)
