@@ -1,22 +1,28 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
+const Address = require('./Address');
+const Driver = require('./Driver');
 
-const Car = sequelize.define('Car', {
+class Car extends Model { }
+
+Car.init({
     licencePlate: {
         type: DataTypes.STRING,
         allowNull: false,
     },
     kilometers: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
-    latitude: {
-        type: DataTypes.FLOAT,
+    addressId: {  // FK correcta hacia Address
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'addresses',
+            key: 'id'
+        },
         allowNull: false,
-    },
-    longitude: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
     },
     estMaintainance: {
         type: DataTypes.DATE,
@@ -26,26 +32,44 @@ const Car = sequelize.define('Car', {
         type: DataTypes.DATE,
         allowNull: true,
     },
-    driverId: {
+    driverId: {  // FK correcta hacia Driver
         type: DataTypes.INTEGER,
         references: {
-            model: 'Drivers',
+            model: 'drivers',
             key: 'id',
         },
         allowNull: true,
+        onDelete: 'SET NULL'
+    },
+    inMaintenance: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    lastMaintainance: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
 }, {
+    sequelize,
+    modelName: 'Car',
+    tableName: 'cars',
     timestamps: true,
+    indexes: [
+        { fields: ['addressId'] },
+        { fields: ['driverId'] }
+    ]
 });
-Car.prototype.agregar = async function () {
-    try {
-        const newCar = await this.save();
-        console.log('Driver agregado a la base de datos:', newCar);
-        return newCar;
-    } catch (error) {
-        console.error('Error al agregar el driver:', error);
-        throw error;
-    }
-};
+
+// Relaciones corregidas
+Car.belongsTo(Address, {
+    foreignKey: 'addressId',
+    as: 'address'
+});
+
+Car.belongsTo(Driver, {
+    foreignKey: 'driverId',  // ✅ Clave foránea correcta
+    as: 'driver'
+});
 
 module.exports = Car;

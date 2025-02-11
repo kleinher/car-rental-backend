@@ -2,13 +2,17 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
 const logger = require('../config/logger');
 
-const Mechanic = sequelize.define('Mechanic', {
+const Mechanic = sequelize.define('mechanics', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    address: {
-        type: DataTypes.STRING,
+    addressId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Addresses',
+            key: 'id',
+        },
         allowNull: false,
     },
     phoneNumber: {
@@ -27,15 +31,5 @@ const Mechanic = sequelize.define('Mechanic', {
     timestamps: true,
 });
 
-Mechanic.prototype.agregar = async function () {
-    try {
-        const newMechanic = await this.save();
-        logger.info('Driver agregado a la base de datos:', newMechanic);
-        return newMechanic.id;
-    } catch (error) {
-        logger.error('Error al agregar el driver:', error);
-        throw error;
-    }
-};
 
 module.exports = Mechanic;

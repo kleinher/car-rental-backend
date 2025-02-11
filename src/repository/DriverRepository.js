@@ -8,7 +8,15 @@ const createDriver = async (driver) => {
 
 const getAllDrivers = async () => {
     await sequelize.sync();
-    return await Driver.findAll();
+    return await Driver.findAll({
+        include: [
+            {
+                model: Address,
+                as: 'address',
+                attributes: ['formattedAddress']
+            }]
+    }
+    );
 }
 
 const getDriverById = async (id) => {
