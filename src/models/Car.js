@@ -2,6 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
 const Address = require('./Address');
 const Driver = require('./Driver');
+const Mechanic = require('./Mechanic');
 
 class Car extends Model { }
 
@@ -41,6 +42,15 @@ Car.init({
         allowNull: true,
         onDelete: 'SET NULL'
     },
+    mechanicId: {  // FK correcta hacia Mechanic
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: Mechanic,
+            key: 'id',
+        },
+        onDelete: 'SET NULL',
+    },
     inMaintenance: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -57,7 +67,8 @@ Car.init({
     timestamps: true,
     indexes: [
         { fields: ['addressId'] },
-        { fields: ['driverId'] }
+        { fields: ['driverId'] },
+        { fields: ['mechanicId'] }
     ]
 });
 
@@ -70,6 +81,11 @@ Car.belongsTo(Address, {
 Car.belongsTo(Driver, {
     foreignKey: 'driverId',  // ✅ Clave foránea correcta
     as: 'driver'
+});
+
+Car.belongsTo(Mechanic, {
+    foreignKey: 'mechanicId',
+    as: 'mechanic'
 });
 
 module.exports = Car;
