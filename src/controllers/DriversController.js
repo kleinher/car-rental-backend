@@ -10,7 +10,7 @@ module.exports = {
             const drivers = await DriverService.getAllDrivers();
             res.status(200).json(drivers);
         } catch (error) {
-            logger.error(error)
+            logger.error("Error al obtener los conductores " + error)
             res.status(500).json({ error: 'An error occurred while fetching drivers' });
         }
     },
