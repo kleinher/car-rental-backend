@@ -1,5 +1,7 @@
 const Car = require('../models/Car');
 const Address = require('../models/Address');
+const Driver = require('../models/Driver');
+const Mechanic = require('../models/Mechanic');
 const logger = require('../config/logger');
 
 class CarRepository {
@@ -66,7 +68,29 @@ class CarRepository {
 
     async getAll() {
         try {
-            return await Car.findAll();
+            return await Car.findAll(
+                {
+                    include: [
+                        {
+                            model: Address,
+                            as: 'address',
+                            attributes: ['formattedAddress'] // Solo traer el nombre de la dirección
+                        },
+
+                        {
+                            model: Driver,
+                            as: 'driver',
+                            attributes: ['name'] // Solo traer el nombre de la dirección
+                        },
+                        {
+                            model: Mechanic,
+                            as: 'mechanic',
+                            attributes: ['name'] // Solo traer el nombre de la dirección
+                        }
+                    ],
+                    attributes: ['id', 'licencePlate', 'kilometers', 'inMaintenance'] // Datos de Driver que quieres mostrar
+                }
+            );
         } catch (error) {
             logger.error('Error getting all cars:', error);
             throw error;

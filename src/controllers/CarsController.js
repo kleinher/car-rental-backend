@@ -1,6 +1,6 @@
 const CarService = require('../service/CarService');
 const logger = require('../config/logger');
-
+const CarRepository = require('../repositories/CarRepository')
 async function carEndMaintenance(req, res) {
     const { licencePlate } = req.body;
 
@@ -100,7 +100,9 @@ async function getCarHandler(req, res) {
 
 async function getAllCarsHandler(req, res) {
     try {
-        const cars = await CarService.getAllCars();
+        const cars = await CarRepository.getAll(
+
+        );
         res.status(200).json(cars);
     } catch (error) {
         logger.error('Error getting all cars:', error);
