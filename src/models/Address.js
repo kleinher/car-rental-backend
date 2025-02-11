@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
+const Driver = require('./Driver'); // Importar aquí después de definir Driver
+
 class Address extends Model { }
 
 Address.init({
@@ -20,6 +22,16 @@ Address.init({
     modelName: 'Address',
     tableName: 'addresses',
     timestamps: false
+});
+
+Driver.hasOne(Address, {
+    foreignKey: 'addressId',
+    as: 'address'
+});
+
+Address.belongsTo(Driver, {
+    foreignKey: 'addressId',
+    as: 'driver'
 });
 
 module.exports = Address;

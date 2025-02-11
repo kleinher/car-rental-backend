@@ -1,8 +1,11 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequialize');
 const Address = require('./Address');
+const Driver = require('./Driver');
 
-const Car = sequelize.define('Cars', {
+class Car extends Model { }
+
+Car.init({
     licencePlate: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -11,7 +14,7 @@ const Car = sequelize.define('Cars', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    addressId: {
+    addressId: {  // FK correcta hacia Address
         type: DataTypes.INTEGER,
         references: {
             model: 'addresses',
@@ -29,14 +32,13 @@ const Car = sequelize.define('Cars', {
         type: DataTypes.DATE,
         allowNull: true,
     },
-    driverId: {
+    driverId: {  // FK correcta hacia Driver
         type: DataTypes.INTEGER,
         references: {
             model: 'drivers',
             key: 'id',
         },
         allowNull: true,
-        onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
     },
     inMaintenance: {
@@ -49,6 +51,9 @@ const Car = sequelize.define('Cars', {
         allowNull: true
     },
 }, {
+    sequelize,
+    modelName: 'Car',
+    tableName: 'cars',
     timestamps: true,
     indexes: [
         { fields: ['addressId'] },
@@ -56,9 +61,15 @@ const Car = sequelize.define('Cars', {
     ]
 });
 
+// Relaciones corregidas
 Car.belongsTo(Address, {
     foreignKey: 'addressId',
     as: 'address'
+});
+
+Car.belongsTo(Driver, {
+    foreignKey: 'driverId',  // ✅ Clave foránea correcta
+    as: 'driver'
 });
 
 module.exports = Car;

@@ -1,18 +1,35 @@
-const initialCars = require('../resources/data.js');
 const drivers = require('../resources/drivers.js');
-let data = initialCars;
+const CarRepository = require('../repositories/CarRepository.js');
+const Driver = require('../models/Driver.js');
 
+async function getAllCars() {
+    let cars = await CarRepository.getAll(
+        {
+            include: [
+                {
+                    model: Address,
+                    as: 'address',
+                    attributes: ['formattedAddress']
+                },
+                {
+                    model: Driver,
+                    as: 'driver',
+                    attributes: ['formattedAddress']
+                },
 
-function getAllCars() {
-    return data.map(car => {
-        const driver = drivers.find(driver => driver.id === car.driverId);
-        return {
-            ...car,
-            driver: driver.name,
-            phoneNumber: driver.phoneNumber,
-
-        };
-    });
+            ]
+        }
+    );
+    cars = cars.map(car => ({
+        id: car.id,
+        licencePlate: car.licencePlate,
+        kilometers: car.kilometers,
+        estMaintainance: car.estMaintainance,
+        lastUpdate: car.lastUpdate,
+        inMaintenance: car.inMaintenance,
+        lastMaintainance: car.lastMaintainance,
+    }));
+    return cars
 }
 
 function updateCar(car) {

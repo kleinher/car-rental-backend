@@ -2,16 +2,15 @@ const Driver = require('./Driver');
 const Address = require('./Address');
 
 const setupAssociations = () => {
-    Address.belongsTo(Driver, {
-        foreignKey: 'driverId',
-        as: 'driver'
-    });
-
-    Driver.hasOne(Address, {
-        foreignKey: 'addressId',
+    Driver.belongsTo(Address, {
+        foreignKey: 'AddressId',
         as: 'address'
     });
 
+    Address.hasMany(Driver, {
+        foreignKey: 'AddressId',
+        as: 'drivers'
+    });
 };
 
 module.exports = setupAssociations;
