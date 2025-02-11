@@ -65,6 +65,8 @@ Car.init({
     modelName: 'Car',
     tableName: 'cars',
     timestamps: true,
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     indexes: [
         { fields: ['addressId'] },
         { fields: ['driverId'] },
