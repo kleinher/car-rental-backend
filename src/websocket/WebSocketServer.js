@@ -9,7 +9,6 @@ function setWebSocketServer(server) {
 
 function initializeWebsocket() {
     wss.on('connection', async (ws) => {
-        console.log('Cliente conectado al WebSocket.');
 
         // Enviar datos iniciales al cliente
         const cars = await getAllCars()
@@ -20,7 +19,6 @@ function initializeWebsocket() {
         }
 
         ws.on('close', () => {
-            console.log('Cliente desconectado del WebSocket.');
         });
 
         ws.on('error', (error) => {

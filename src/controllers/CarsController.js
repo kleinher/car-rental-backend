@@ -1,6 +1,7 @@
 const CarService = require('../service/CarService');
 const logger = require('../config/logger');
 const CarRepository = require('../repositories/CarRepository')
+const AddressRepository = require('../repositories/AddressRepository')
 async function carEndMaintenance(req, res) {
     const { licencePlate } = req.body;
 
@@ -22,10 +23,12 @@ async function carEndMaintenance(req, res) {
 
 
 async function createCarHandler(req, res) {
-    const { licencePlate, kilometers, latitude, longitude, address,
-        estMaintainance, driverId, inMaintenance } = req.body;
+    logger.info('Creando nuevo coche');
+    const { licencePlate, kilometers, address,
+        estMaintainance, driverId, inMaintenance, mechanicId } = req.body;
 
-    if (!licencePlate || !latitude || !longitude || !address) {
+    if (!licencePlate || !address) {
+        logger.error('Error al crear coche, Missing required fields')
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -33,15 +36,14 @@ async function createCarHandler(req, res) {
         const carData = {
             licencePlate,
             kilometers,
-            latitude,
-            longitude,
-            address,
+            address: address,
             estMaintainance: estMaintainance || null,
-            driverId: driverId || null,
+            driverId: driverId,
             inMaintenance: inMaintenance || false,
-            lastUpdate: new Date()
+            lastUpdate: new Date(),
+            mechanicId: mechanicId
         };
-        const car = await CarService.createCar(carData);
+        const car = await CarRepository.create(carData);
         res.status(201).json(car);
     } catch (error) {
         res.status(500).json({ error: error.message });

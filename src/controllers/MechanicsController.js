@@ -50,10 +50,10 @@ module.exports = {
                 addressId: driverAddress.id
             };
 
-            const nuevoMechanic = Mechanic.build(mechanic);
-            const id = await agregarDB(nuevoMechanic);
-            res.status(201).json(id);
+            const nuevoMechanic = Mechanic.create(mechanic);
+            res.status(201).json(nuevoMechanic.id);
         } catch (error) {
+            logger.error('Error al crear un mecanico' + error);
             res.status(500).json({ error: 'An error occurred while creating the mechanic' });
         }
     },
