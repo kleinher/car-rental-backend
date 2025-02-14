@@ -5,9 +5,12 @@ require('dotenv').config();
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
-    logging: false,
+    logging: process.env.NODE_ENV === 'DEV',
     dialectOptions: {
-        ssl: false
+        ssl: process.env.NODE_ENV === 'PROD' ? {
+            require: true,
+            rejectUnauthorized: false // 🚨 Necesario para Railway
+        } : false
     }
 });
 
@@ -27,7 +30,7 @@ const initializeDatabase = async () => {
         for (const file of seedFiles) {
             if (file.endsWith('.sql')) {
                 const sql = fs.readFileSync(path.join(seedsDir, file), 'utf8');
-                // await sequelize.query(sql);
+                await sequelize.query(sql);
                 console.log(`✅ Seed ejecutado: ${file}`);
             }
         }
