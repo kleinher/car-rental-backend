@@ -8,31 +8,35 @@ Driver.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        field: 'name'
     },
     phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
+        field: 'phone_number'
     },
-    addressId: {  // FK correcta hacia Address
+    addressId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: 'addresses',
             key: 'id'
-        }
+        },
+        field: 'address_id'
     }
 }, {
     sequelize,
     modelName: 'Driver',
     tableName: 'drivers',
     timestamps: true,
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
 });
 
 // Relación con Address
 Driver.belongsTo(Address, {
     foreignKey: 'addressId',
+    targetKey: 'id',
     as: 'address',
 });
 

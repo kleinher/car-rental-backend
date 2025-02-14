@@ -8,6 +8,7 @@ Mechanic.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        field: 'name'
     },
     addressId: {
         type: DataTypes.INTEGER,
@@ -16,18 +17,20 @@ Mechanic.init({
             key: 'id',
         },
         allowNull: false,
+        field: 'address_id'
     },
     phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
+        field: 'phone_number'
     },
 }, {
     sequelize,
     modelName: 'Mechanic',
     tableName: 'mechanics',
     timestamps: true,
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
 });
 
 // Relación con Address
