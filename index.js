@@ -8,7 +8,7 @@ const mechanicRoutes = require('./src/routes/mechanicRoutes');
 const { initializeWppClient } = require('./src/client/WhatsappClient');
 
 require('dotenv').config();
-
+console.log("API Key:", process.env.OPENAI_API_KEY);
 const http = require('http');
 const { setWebSocketServer, initializeWebsocket } = require('./src/websocket/WebSocketServer');
 const app = express();
@@ -34,7 +34,7 @@ const server = http.createServer(app);
 // Inicializar WebSocketServer
 const webSocketServer = setWebSocketServer(server);
 initializeWebsocket();
-//initializeWppClient();
+initializeWppClient();
 // Iniciar el servidor HTTP
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

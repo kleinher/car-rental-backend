@@ -5,10 +5,12 @@ const { broadcast } = require('../../websocket/WebSocketServer.js');
 const logger = require('../../config/logger');
 
 const OpenAIApi = require("openai");
+const CarRepository = require('../../repositories/CarRepository.js');
+require("dotenv").config();
 
 const openai = new OpenAIApi({
-    organization: "org-D2c3Dmy65zgUxFJ2hOFTaqMX",
-    project: "proj_O7LW7CupNKf0MzB0J1BPM3de",
+    organization: process.env.OPENAI_ORG,
+    project: process.env.OPENAI_PROJECT,
     apiKey: process.env.OPENAI_API_KEY
 });
 
@@ -61,9 +63,9 @@ function getConversation(phoneNumber, licencePlate) {
 }
 
 // ***** MÉTODO PRINCIPAL *****
-function validateKm(licencePlate, phoneNumber, kmValidar) {
+async function validateKm(licencePlate, phoneNumber, kmValidar) {
     // 1. Obtener el coche y validaciones preliminares
-    const car = checkCarExists(licencePlate, phoneNumber);
+    const car = await checkCarExists(licencePlate, phoneNumber);
     checkKmIsGreater(car, kmValidar);
 
     // 2. Calcular la nueva tasa de uso diario
@@ -89,8 +91,8 @@ function validateKm(licencePlate, phoneNumber, kmValidar) {
  *   - Busca el coche por patente y teléfono.
  *   - Lanza un error si no existe.
  */
-function checkCarExists(licencePlate) {
-    const car = getCarByPlate(licencePlate);
+async function checkCarExists(licencePlate) {
+    const car = await CarRepository.findByPlate(licencePlate);
     if (!car) {
         const err = `No se encontró el coche con patente ${licencePlate}.`;
         logger.error(err);
@@ -186,15 +188,16 @@ function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
     updateCar(car);
 }
 
+async function hadleMediaMessage(phoneNumber) {
+    sendMessage(phoneNumber, "Me lo pasas en texto?");
+}
 
 async function handleUserMessage(phoneNumber, licencePlate, userInput) {
     const messages = getConversation(phoneNumber, licencePlate);
 
-    // 2. Agregamos el mensaje del usuario
     messages.push({ role: "user", content: userInput });
     logger.info(`User message added: ${userInput}`);
 
-    // 3. Llamada a la API de OpenAI
     const gptResponse = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages,
@@ -248,4 +251,4 @@ async function handleUserMessage(phoneNumber, licencePlate, userInput) {
     return { done: false };
 }
 
-module.exports = { handleUserMessage };
+module.exports = { handleUserMessage, hadleMediaMessage };

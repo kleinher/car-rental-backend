@@ -4,21 +4,6 @@ const Address = require('../models/Address.js');
 
 async function getAllCars() {
     let cars = await CarRepository.getAll(
-        {
-            include: [
-                {
-                    model: Address,
-                    as: 'address',
-                    attributes: ['formattedAddress']
-                },
-                {
-                    model: Driver,
-                    as: 'driver',
-                    attributes: ['name']
-                },
-
-            ]
-        }
     );
 
     return cars
@@ -42,13 +27,6 @@ function getCarByPlateAndPhone(licensePlate, phoneNumber) {
     return car;
 }
 
-function getCarByPlate(licensePlate) {
-    const car = data.find(car => car.licensePlate === licensePlate);
-    if (!car) {
-        throw new Error('Car not found');
-    }
-    return car;
-}
 
 
 
@@ -57,5 +35,4 @@ module.exports = {
     updateCar,
     addCar,
     getCarByPlateAndPhone,
-    getCarByPlate,
 };

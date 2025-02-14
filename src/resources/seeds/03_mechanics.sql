@@ -7,14 +7,14 @@ INSERT INTO mechanics (
     )
 VALUES (
         'Bob Mechanic',
-        '+11122233344',
+        '5493743515495',
         1,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     ),
     (
         'Alice Mechanic',
-        '+14445556677',
+        '5493743515495',
         2,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP

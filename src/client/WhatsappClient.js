@@ -46,7 +46,7 @@ function initializeWppClient() {
     client.on('message', async (message) => {
         const senderNumber = message.from.split('@')[0];
         const { processUserMessage } = require('../service/UpdateService'); // Carga diferida
-        await processUserMessage(senderNumber, message.body);
+        await processUserMessage(senderNumber, message.hasMedia, message.body);
     });
 }
 

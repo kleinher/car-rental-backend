@@ -2,7 +2,8 @@ const logger = require('../config/logger');
 const { updateCar, getCarByPlate, getAllCars } = require('../client/CarsClient');
 const { broadcast } = require('../websocket/WebSocketServer.js');
 const { handleUserMessage } = require('./gpt/ChatService');
-const { get } = require('../routes/routes.js');
+const ChatService = require('./gpt/ChatService');
+const CarRepository = require('../repositories/CarRepository.js');
 
 
 let phoneCache = new Map();
@@ -14,20 +15,23 @@ async function processFirstMessage(phoneNumber, licencePlate) {
 
     phoneCache.get(phoneNumber).add(licencePlate);
 
-    let car = getCarByPlate(licencePlate);
+    let car = await CarRepository.findByPlate(licencePlate);
     car.reminderSent = true;
     car.reminderSentDate = new Date();
-    updateCar(car);
+    CarRepository.update(car.id, car);
     broadcast(getAllCars());
 }
 
 
-async function processUserMessage(phoneNumber, message) {
+async function processUserMessage(phoneNumber, hasMedia, message) {
     if (!phoneCache.has(phoneNumber)) {
         logger.info("Cache miss:" + phoneNumber);
         return;
     }
-
+    if (hasMedia) {
+        ChatService.hadleMediaMessage(phoneNumber);
+        return;
+    }
     const licencePlate = phoneCache.get(phoneNumber).values().next().value;
     const result = await handleUserMessage(phoneNumber, licencePlate, message);
 

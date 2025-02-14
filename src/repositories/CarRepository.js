@@ -24,9 +24,8 @@ class CarRepository {
 
     async update(id, carData) {
         try {
-            const car = await Car.findByPk(id);
-            if (!car) throw new Error('Car not found');
-            return await car.update(carData);
+            await Car.update(carData, { where: { id } });
+            return id;
         } catch (error) {
             logger.error('Error updating car:', error);
             throw error;
@@ -80,7 +79,7 @@ class CarRepository {
                         {
                             model: Driver,
                             as: 'driver',
-                            attributes: ['name'] // Solo traer el nombre de la dirección
+                            attributes: ['name', 'phoneNumber'] // Solo traer el nombre de la dirección
                         },
                         {
                             model: Mechanic,
