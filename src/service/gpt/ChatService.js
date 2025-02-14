@@ -7,6 +7,7 @@ const logger = require('../../config/logger');
 const OpenAIApi = require("openai");
 const CarRepository = require('../../repositories/CarRepository.js');
 require("dotenv").config();
+console.log("OPENAI_API_KEY en Railway:", process.env.OPENAI_API_KEY);
 
 const openai = new OpenAIApi({
     organization: process.env.OPENAI_ORG,
