@@ -13,7 +13,7 @@ module.exports = {
                     {
                         model: Address,
                         as: 'address',
-                        attributes: ['formattedAddress'] // Solo traer el nombre de la dirección
+                        attributes: ['formatted_address'] // Solo traer el nombre de la dirección
                     }
                 ],
                 attributes: ['id', 'name', 'phoneNumber'] // Datos de Driver que quieres mostrar
@@ -42,7 +42,7 @@ module.exports = {
         try {
 
             const address = {
-                formattedAddress: req.body.address,
+                formatted_address: req.body.address,
                 latitude: req.body.latitude,
                 longitude: req.body.longitude,
             }

@@ -4,7 +4,7 @@ const sequelize = require('../config/sequelize');
 class Address extends Model { }
 
 Address.init({
-    formattedAddress: {
+    formatted_address: {
         type: DataTypes.STRING,
         allowNull: false
     },

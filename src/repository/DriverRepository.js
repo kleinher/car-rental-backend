@@ -13,7 +13,7 @@ const getAllDrivers = async () => {
             {
                 model: Address,
                 as: 'address',
-                attributes: ['formattedAddress'] // Solo traer el nombre de la dirección
+                attributes: ['formatted_address'] // Solo traer el nombre de la dirección
             }
         ],
         attributes: ['id', 'name', 'phoneNumber'] // Datos de Driver que quieres mostrar

@@ -1,6 +1,4 @@
 const CarRepository = require('../repositories/CarRepository.js');
-const Driver = require('../models/Driver.js');
-const Address = require('../models/Address.js');
 
 async function getAllCars() {
     let cars = await CarRepository.getAll(
