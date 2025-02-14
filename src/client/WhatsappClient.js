@@ -7,7 +7,7 @@ const qrcodeIther = require('qrcode');
 
 const client = new Client({
     authStrategy: new LocalAuth({
-        dataPath: "./sessions"
+        dataPath: "/tmp/sessions"
     }),
     puppeteer: {
         headless: true,
