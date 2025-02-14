@@ -70,3 +70,4 @@ temp/
 .wwebjs_cache/
 package-lock.json
 database.sqlite
+session

@@ -3,11 +3,12 @@ const qrcode = require('qrcode-terminal');
 const logger = require('../config/logger');
 const { sendQr, sendOk, setClientNotReady } = require('../websocket/WebSocketServer');
 const qrcodeIther = require('qrcode');
+require("dotenv").config();
 
 
 const client = new Client({
     authStrategy: new LocalAuth({
-        dataPath: "/tmp/sessions"
+        dataPath: process.env.SESSION_PATH
     }),
     puppeteer: {
         headless: true,
