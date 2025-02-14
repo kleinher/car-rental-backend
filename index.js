@@ -8,7 +8,6 @@ const mechanicRoutes = require('./src/routes/mechanicRoutes');
 const { initializeWppClient } = require('./src/client/WhatsappClient');
 
 require('dotenv').config();
-console.log("API Key:", process.env.OPENAI_API_KEY);
 const http = require('http');
 const { setWebSocketServer, initializeWebsocket } = require('./src/websocket/WebSocketServer');
 const app = express();

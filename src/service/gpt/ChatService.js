@@ -3,11 +3,11 @@ const { updateCar, getCarByPlate, getAllCars } = require('../../client/CarsClien
 const { sendMessage } = require('../../client/MessageClient');
 const { broadcast } = require('../../websocket/WebSocketServer.js');
 const logger = require('../../config/logger');
+require("dotenv").config();
+console.log("🔍 Verificando OPENAI_API_KEY:", process.env.OPENAI_API_KEY);
 
 const OpenAIApi = require("openai");
 const CarRepository = require('../../repositories/CarRepository.js');
-require("dotenv").config();
-console.log("OPENAI_API_KEY en Railway:", process.env.OPENAI_API_KEY);
 
 const openai = new OpenAIApi({
     organization: process.env.OPENAI_ORG,
