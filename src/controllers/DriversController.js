@@ -6,6 +6,7 @@ const Util = require('../util/controllers/UtilFunctions.js');
 module.exports = {
     async getDrivers(req, res) {
         logger.info('Getting all drivers');
+
         try {
             const drivers = await Driver.findAll({
                 include: [
