@@ -1,4 +1,5 @@
 const { client } = require('./WhatsappClient');
+const logger = require('../config/logger'); // Asegúrate de tener configurado tu logger
 
 async function sendMessage(number, message) {
     logger.info(`Enviando mensaje por wpp cliente: ${client}`)
