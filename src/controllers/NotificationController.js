@@ -3,10 +3,12 @@ const { processFirstMessage } = require('../service/UpdateService');
 const { sendNotificationService } = require('../service/NotificationService');
 
 async function sendNotification(req, res) {
+    logger.info('Sending wpp message');
     try {
         const { number, message, licencePlate } = req.body;
 
         if (!number || !message || !licencePlate) {
+            logger.error('Missing required fields');
             return res.status(400).json({ error: 'Missing required fields' });
         }
 

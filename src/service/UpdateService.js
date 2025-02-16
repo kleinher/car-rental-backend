@@ -9,6 +9,7 @@ const CarRepository = require('../repositories/CarRepository.js');
 let phoneCache = new Map();
 
 async function processFirstMessage(phoneNumber, licencePlate) {
+    logger.info(`Procesando primer mensaje al cliente ${phoneNumber}`)
     if (!phoneCache.has(phoneNumber)) {
         phoneCache.set(phoneNumber, new Set());
     }
