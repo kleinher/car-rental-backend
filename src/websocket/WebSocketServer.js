@@ -4,6 +4,7 @@ const logger = require('../config/logger');
 wss = null;
 let isClientReady = false;
 let qr = null;
+
 function setWebSocketServer(server) {
     wss = new WebSocket.Server({ server });
 }
