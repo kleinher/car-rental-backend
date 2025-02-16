@@ -82,4 +82,4 @@ function setClientNotReady() {
 
 
 
-module.exports = { setQr, broadcast, initializeWebsocket, setWebSocketServer, sendQr, sendOk, setClientNotReady };
+module.exports = { sendNOk, setQr, broadcast, initializeWebsocket, setWebSocketServer, sendQr, sendOk, setClientNotReady };
