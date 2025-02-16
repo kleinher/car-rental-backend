@@ -2,6 +2,7 @@ const logger = require('../config/logger'); // Asegúrate de tener configurado t
 
 const { sendMessage } = require('../client/MessageClient');
 async function sendNotificationService(number, message) {
+    logger.info('Enviando mensaje a: ' + number);
     try {
         await sendMessage(number, message);
 
