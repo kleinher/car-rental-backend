@@ -58,6 +58,16 @@ function sendOk() {
         }
     });
 }
+function sendNOk() {
+    isClientReady = true;
+
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({ type: 'validated', value: false }));
+        }
+    });
+}
+
 
 function setClientNotReady() {
     isClientReady = false;

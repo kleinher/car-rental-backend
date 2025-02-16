@@ -1,7 +1,7 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const logger = require('../config/logger');
-const { setQr, sendQr, sendOk, setClientNotReady } = require('../websocket/WebSocketServer');
+const { sendNOk, setQr, sendQr, sendOk, setClientNotReady } = require('../websocket/WebSocketServer');
 const qrcodeIther = require('qrcode');
 require("dotenv").config();
 
@@ -20,6 +20,7 @@ function initializeWppClient() {
     client.initialize();
 
     client.on('qr', async (qr) => {
+        sendNOk()
         qrcode.generate(qr, { small: true });
         const qrImage = await qrcodeIther.toDataURL(qr);
         logger.info('QR Code generated');
