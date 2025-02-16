@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const { getAllCars } = require('../client/CarsClient');
+const logger = require('../config/logger');
 wss = null;
 let isClientReady = false;
 let qr = null;
@@ -42,6 +43,7 @@ function setQr(qrCode) {
 }
 
 function sendQr() {
+    logger.info("QR enviado")
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: 'qr', qr: qr }));

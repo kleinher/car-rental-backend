@@ -20,7 +20,7 @@ function initializeWppClient() {
     client.initialize();
 
     client.on('qr', async (qr) => {
-        setClientNotReady()
+        setClientNotReady();
         qrcode.generate(qr, { small: true });
         const qrImage = await qrcodeIther.toDataURL(qr);
         logger.info('QR Code generated');
