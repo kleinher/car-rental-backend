@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const { getAllCars } = require('../client/CarsClient');
 wss = null;
 let isClientReady = false;
-
+let qr = null;
 function setWebSocketServer(server) {
     wss = new WebSocket.Server({ server });
 }
@@ -14,6 +14,7 @@ function initializeWebsocket() {
         const cars = await getAllCars()
         const datos = JSON.stringify({ type: 'cars', cars: cars })
         ws.send(datos);
+        sendQr();
         if (isClientReady) {
             ws.send(JSON.stringify({ type: 'validated', value: true }));
         }
@@ -36,10 +37,14 @@ function broadcast(cars) {
     });
 }
 
-function sendQr(qrCode) {
+function setQr(qrCode) {
+    qr = qrCode;
+}
+
+function sendQr() {
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type: 'qr', qr: qrCode }));
+            client.send(JSON.stringify({ type: 'qr', qr: qr }));
         }
     });
 }
@@ -67,4 +72,4 @@ function setClientNotReady() {
 
 
 
-module.exports = { broadcast, initializeWebsocket, setWebSocketServer, sendQr, sendOk, setClientNotReady };
+module.exports = { setQr, broadcast, initializeWebsocket, setWebSocketServer, sendQr, sendOk, setClientNotReady };
