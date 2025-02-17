@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
+console.log(process.env.DATABASE_URL);
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     logging: false,
