@@ -27,5 +27,10 @@ COPY . .
 RUN useradd -ms /bin/bash pptruser
 USER pptruser
 
+RUN npm install -g wscat
+
+# Probar conexión a WebSocket
+RUN wscat -c wss://web.whatsapp.com/ws || echo "No se pudo conectar a WhatsApp WebSocket"
+
 # Lanzar tu app
 CMD ["npm", "start"]
