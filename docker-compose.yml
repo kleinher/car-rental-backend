@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "4000:4000"
+    networks:
+      - mi-red
+
+  postgres:
+    image: postgres:latest
+    container_name: mi-postgres
+    environment:
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: base
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - mi-red
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/certs:/etc/letsencrypt # Aquí se montarán los certificados SSL
+      - ./nginx/conf.d:/etc/nginx/conf.d # Archivo de configuración Nginx
+    networks:
+      - mi-red
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./nginx/certs:/etc/letsencrypt
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done;'"
+    networks:
+      - mi-red
+
+networks:
+  mi-red:
+    driver: bridge
+
+volumes:
+  postgres-data:
+
+
