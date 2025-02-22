@@ -39,8 +39,9 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./nginx/certs:/etc/letsencrypt # Aquí se montarán los certificados SSL
-      - ./nginx/conf.d:/etc/nginx/conf.d # Archivo de configuración Nginx
+      - /home/ec2-user/certbot/www:/var/www/certbot
+      - /home/ec2-user/certbot/etc:/etc/letsencrypt
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - mi-red
 
