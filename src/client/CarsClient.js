@@ -1,11 +1,6 @@
 const CarRepository = require('../repositories/CarRepository.js');
 
-async function getAllCars() {
-    let cars = await CarRepository.getAll(
-    );
 
-    return cars
-}
 
 function updateCar(car) {
     const carIndex = data.findIndex(c => c.licensePlate === car.licensePlate);
@@ -29,7 +24,6 @@ function getCarByPlateAndPhone(licensePlate, phoneNumber) {
 
 
 module.exports = {
-    getAllCars,
     updateCar,
     addCar,
     getCarByPlateAndPhone,
