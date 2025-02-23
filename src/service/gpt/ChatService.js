@@ -79,7 +79,7 @@ async function validateKm(licencePlate, phoneNumber, kmValidar) {
     updateCarData(car, kmValidar, newDailyUsage, predictedDate);
 
     // 5. Notificar y retornar resultado
-    broadcast(getAllCars());
+    broadcast(CarRepository.getAll());
     logger.info(`Updated car with plate ${licencePlate} to ${kmValidar} km`);
     return { result: "Ok, km validados" };
 }
@@ -185,7 +185,7 @@ function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
     car.reminderSent = false;
     car.reminderSentDate = null;
 
-    updateCar(car);
+    CarRepository.update(car.id, car);
 }
 
 async function hadleMediaMessage(phoneNumber) {

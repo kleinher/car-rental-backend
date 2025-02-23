@@ -52,7 +52,7 @@ module.exports = {
                 addressId: driverAddress.id
             };
 
-            const nuevoMechanic = Mechanic.create(mechanic);
+            const nuevoMechanic = await Mechanic.create(mechanic);
             logger.info(`Mechanic created successfully with id: ${nuevoMechanic.id}`);
             res.status(201).json(nuevoMechanic.id);
         } catch (error) {
