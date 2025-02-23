@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const { getAllCars } = require('../client/CarsClient');
+const CarRepository = require('../repositories/CarRepository');
 const logger = require('../config/logger');
 wss = null;
 let isClientReady = false;
@@ -13,7 +13,8 @@ function initializeWebsocket() {
     wss.on('connection', async (ws) => {
 
         // Enviar datos iniciales al cliente
-        const cars = await getAllCars()
+        const cars = await CarRepository.getAll();
+
         const datos = JSON.stringify({ type: 'cars', cars: cars })
         ws.send(datos);
         sendQr();

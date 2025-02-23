@@ -87,7 +87,7 @@ class CarRepository {
                             attributes: ['name'] // Solo traer el nombre de la dirección
                         }
                     ],
-                    attributes: ['id', 'licencePlate', 'kilometers', 'inMaintenance'] // Datos de Driver que quieres mostrar
+                    attributes: ['id', 'licencePlate', 'kilometers', 'inMaintenance', 'estMaintainance'] // Datos de Driver que quieres mostrar
                 }
             );
         } catch (error) {

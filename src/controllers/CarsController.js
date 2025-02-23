@@ -103,7 +103,6 @@ async function getCarHandler(req, res) {
 async function getAllCarsHandler(req, res) {
     try {
         const cars = await CarRepository.getAll(
-
         );
         res.status(200).json(cars);
     } catch (error) {
