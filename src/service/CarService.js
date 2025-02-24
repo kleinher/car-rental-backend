@@ -1,17 +1,18 @@
 const { broadcast } = require('../websocket/WebSocketServer.js');
 const carRepository = require('../repositories/CarRepository');
 const logger = require('../config/logger');
+const Car = require('../models/Car');
 
-async function endMaintenance(licensePlate) {
+async function endMaintenance(licencePlate) {
     try {
-        const car = await carRepository.findByPlate(licensePlate);
-        await carRepository.update(car.id, {
+
+        const carData = {
             inMaintenance: false,
             lastMaintainance: new Date()
-        });
-
-        const cars = await getAllCars();
+        };
+        await Car.update(carData, { where: { licencePlate } });
         broadcast();
+
     } catch (error) {
         logger.error('Error ending maintenance:', error);
         throw error;
