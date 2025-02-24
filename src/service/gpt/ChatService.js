@@ -79,7 +79,7 @@ async function validateKm(licencePlate, phoneNumber, kmValidar) {
     updateCarData(car, kmValidar, newDailyUsage, predictedDate);
 
     // 5. Notificar y retornar resultado
-    broadcast(CarRepository.getAll());
+    broadcast();
     logger.info(`Updated car with plate ${licencePlate} to ${kmValidar} km`);
     return { result: "Ok, km validados" };
 }

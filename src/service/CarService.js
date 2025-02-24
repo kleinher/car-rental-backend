@@ -31,7 +31,7 @@ async function endMaintenance(licensePlate) {
         });
 
         const cars = await getAllCars();
-        broadcast(cars);
+        broadcast();
     } catch (error) {
         logger.error('Error ending maintenance:', error);
         throw error;

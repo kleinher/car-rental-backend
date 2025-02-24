@@ -20,7 +20,7 @@ async function processFirstMessage(phoneNumber, licencePlate) {
     car.reminderSent = true;
     car.reminderSentDate = new Date();
     CarRepository.update(car.id, car);
-    broadcast(CarRepository.getAll());
+    broadcast();
 }
 
 
