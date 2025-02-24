@@ -23,4 +23,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/${{ secrets.EC2_USER }}/car-rental-backend
             git pull origin main
+
+            # Build y start con Docker Compose
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
           EOF
