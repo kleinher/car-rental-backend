@@ -16,10 +16,11 @@ async function processFirstMessage(phoneNumber, licencePlate) {
 
     phoneCache.get(phoneNumber).add(licencePlate);
 
-    let car = await CarRepository.findByPlate(licencePlate);
-    car.reminderSent = true;
-    car.reminderSentDate = new Date();
-    CarRepository.update(car.id, car);
+    carUpdate = {
+        reminderSent: true,
+        reminderSentDate: new Date()
+    }
+    CarRepository.update(licencePlate, carUpdate);
     broadcast();
 }
 

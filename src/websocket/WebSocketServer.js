@@ -38,6 +38,7 @@ async function broadcast() {
             client.send(JSON.stringify({ type: 'cars', cars: cars }));
         }
     });
+
 }
 
 function setQr(qrCode) {

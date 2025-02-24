@@ -69,6 +69,17 @@ Car.init({
         allowNull: true,
         field: 'last_maintainance'
     },
+    reminderSent: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'reminder_sent'
+    },
+    reminderSentDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'reminder_sent_date'
+    },
 }, {
     sequelize,
     modelName: 'Car',

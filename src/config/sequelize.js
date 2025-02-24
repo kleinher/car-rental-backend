@@ -43,6 +43,6 @@ const initializeDatabase = async () => {
 };
 
 // Llamar a la función para inicializar la base de datos
-//initializeDatabase();
+initializeDatabase();
 
 module.exports = sequelize;

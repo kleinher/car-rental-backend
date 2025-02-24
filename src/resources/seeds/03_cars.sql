@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS cars (
     driver_id INTEGER REFERENCES drivers(id),
     in_maintenance BOOLEAN DEFAULT false,
     last_maintainance DATE,
+    reminder_sent BOOLEAN DEFAULT false,
+    reminder_sent_date TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -20,6 +22,8 @@ INSERT INTO cars (
         driver_id,
         in_maintenance,
         last_maintainance,
+        reminder_sent,
+        reminder_sent_date,
         created_at,
         updated_at
     )
@@ -31,6 +35,8 @@ VALUES (
         CURRENT_TIMESTAMP,
         1,
         false,
+        '2023-12-15',
+        true,
         '2023-12-15',
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
@@ -44,6 +50,8 @@ VALUES (
         2,
         false,
         '2023-11-30',
+        false,
+        NULL,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     ),
@@ -56,6 +64,8 @@ VALUES (
         NULL,
         true,
         '2024-01-10',
+        false,
+        NULL,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
     );

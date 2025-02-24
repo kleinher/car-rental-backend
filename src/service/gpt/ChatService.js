@@ -185,7 +185,7 @@ function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
     car.reminderSent = false;
     car.reminderSentDate = null;
 
-    CarRepository.update(car.id, car);
+    CarRepository.update(car.licencePlate, car);
 }
 
 async function hadleMediaMessage(phoneNumber) {

@@ -22,10 +22,11 @@ class CarRepository {
         }
     }
 
-    async update(id, carData) {
+    async update(licencePlate, carData) {
         try {
-            await Car.update(carData, { where: { id } });
-            return id;
+            const a = await Car.update(carData, { where: { licencePlate } });
+            logger.info('Car updated:', a);
+            return licencePlate;
         } catch (error) {
             logger.error('Error updating car:', error);
             throw error;
@@ -87,7 +88,7 @@ class CarRepository {
                             attributes: ['name'] // Solo traer el nombre de la dirección
                         }
                     ],
-                    attributes: ['id', 'licencePlate', 'kilometers', 'inMaintenance', 'estMaintainance', 'driverId'] // Datos de Driver que quieres mostrar
+                    attributes: ['id', 'licencePlate', 'kilometers', 'inMaintenance', 'estMaintainance', 'driverId', 'reminderSent', 'reminderSentDate'] // Datos de Driver que quieres mostrar
                 }
             );
         } catch (error) {
