@@ -8,7 +8,7 @@ services:
     container_name: backend
     restart: always
     volumes:
-      - /home/ec2-user/tmp/sessions:/tmp/sessions
+      - ./tmp/sessions:/tmp/sessions
     ports:
       - "4000:4000"
     networks:
@@ -25,7 +25,7 @@ services:
       - "5432:5432"
     restart: unless-stopped
     volumes:
-      - /home/ec2-user/postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - mi-red
 
