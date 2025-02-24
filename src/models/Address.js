@@ -4,6 +4,11 @@ const sequelize = require('../config/sequelize');
 class Address extends Model { }
 
 Address.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     formattedAddress: {
         type: DataTypes.STRING,
         allowNull: false,

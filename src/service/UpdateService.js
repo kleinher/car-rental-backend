@@ -1,5 +1,4 @@
 const logger = require('../config/logger');
-const { updateCar, getCarByPlate, getAllCars } = require('../client/CarsClient');
 const { broadcast } = require('../websocket/WebSocketServer.js');
 const { handleUserMessage } = require('./gpt/ChatService');
 const ChatService = require('./gpt/ChatService');
@@ -16,11 +15,12 @@ async function processFirstMessage(phoneNumber, licencePlate) {
 
     phoneCache.get(phoneNumber).add(licencePlate);
 
-    carUpdate = {
+    const carUpdate = {
         reminderSent: true,
         reminderSentDate: new Date()
     }
-    CarRepository.update(licencePlate, carUpdate);
+
+    await CarRepository.update(licencePlate, carUpdate);
     broadcast();
 }
 
@@ -34,14 +34,15 @@ async function processUserMessage(phoneNumber, hasMedia, message) {
         ChatService.hadleMediaMessage(phoneNumber);
         return;
     }
+
     const licencePlate = phoneCache.get(phoneNumber).values().next().value;
     const result = await handleUserMessage(phoneNumber, licencePlate, message);
 
     if (result.done) {
-        const licencePlates = phoneCache.get(phoneNumber); // Agrega esto
-        licencePlates.delete(licencePlate); // Corrige este acceso
+        const licencePlates = phoneCache.get(phoneNumber);
+        licencePlates.delete(licencePlate);
         if (licencePlates.size === 0) {
-            phoneCache.delete(phoneNumber); // Remueve el número si ya no hay matrículas
+            phoneCache.delete(phoneNumber);
         }
     }
 

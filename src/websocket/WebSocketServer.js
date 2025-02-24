@@ -1,9 +1,9 @@
 const WebSocket = require('ws');
 const CarRepository = require('../repositories/CarRepository');
 const logger = require('../config/logger');
-wss = null;
 let isClientReady = false;
 let qr = null;
+let wss;
 
 function setWebSocketServer(server) {
     wss = new WebSocket.Server({ server });

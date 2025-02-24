@@ -24,8 +24,7 @@ class CarRepository {
 
     async update(licencePlate, carData) {
         try {
-            const a = await Car.update(carData, { where: { licencePlate } });
-            logger.info('Car updated:', a);
+            await Car.update(carData, { where: { licencePlate } });
             return licencePlate;
         } catch (error) {
             logger.error('Error updating car:', error);
