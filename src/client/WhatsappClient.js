@@ -4,7 +4,9 @@ const logger = require('../config/logger');
 const { setQr, sendQr, sendOk, setClientNotReady } = require('../websocket/WebSocketServer');
 const qrcodeIther = require('qrcode');
 require("dotenv").config();
+const { parseVCard } = require('./VCard');
 
+const ADMINISTRADORES = ["34645983954", "34645408152", "5492262651624"];
 
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -63,8 +65,17 @@ function initializeWppClient() {
 
     client.on('message', async (message) => {
         const senderNumber = message.from.split('@')[0];
-        const { processUserMessage } = require('../service/UpdateService'); // Carga diferida
+        const { processUserMessage } = require('../service/UpdateService');
         await processUserMessage(senderNumber, message.hasMedia, message.body);
+        if (message.type === 'vcard') {
+            const contactSenderNumber = message.from.replace('@c.us', '');
+            if (ADMINISTRADORES.includes(contactSenderNumber)) {
+                let contactInfo = parseVCard(message.body);
+                logger.info('Datos extraídos de la vCard:' + JSON.stringify(contactInfo, null, 2));
+            } else {
+                logger.warn(`El número ${contactSenderNumber} no está autorizado para enviar vCards:`);
+            }
+        }
     });
 }
 
