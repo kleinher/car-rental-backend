@@ -1,5 +1,4 @@
 const { functions } = require('./Functions');
-const { updateCar, getCarByPlate, getAllCars } = require('../../client/CarsClient');
 const { sendMessage } = require('../../client/MessageClient');
 const { broadcast } = require('../../websocket/WebSocketServer.js');
 const logger = require('../../config/logger');
@@ -65,7 +64,7 @@ function getConversation(phoneNumber, licencePlate) {
 // ***** MÉTODO PRINCIPAL *****
 async function validateKm(licencePlate, phoneNumber, kmValidar) {
     // 1. Obtener el coche y validaciones preliminares
-    const car = await checkCarExists(licencePlate, phoneNumber);
+    const car = await checkCarExists(licencePlate);
     checkKmIsGreater(car, kmValidar);
 
     // 2. Calcular la nueva tasa de uso diario

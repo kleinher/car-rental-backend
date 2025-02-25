@@ -80,6 +80,11 @@ Car.init({
         allowNull: true,
         field: 'reminder_sent_date'
     },
+    dailyUsage: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'daily_usage'
+    }
 }, {
     sequelize,
     modelName: 'Car',

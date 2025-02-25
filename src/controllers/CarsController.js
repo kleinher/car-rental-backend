@@ -73,7 +73,7 @@ async function updateCarHandler(req, res) {
             inMaintenance,
             lastUpdate: new Date()
         };
-        const car = await CarService.updateCar(id, carData);
+        const car = await CarRepository.update(licencePlate, carData);
         logger.info(`Car updated successfully with id: ${id}`);
         res.status(200).json(car);
     } catch (error) {
@@ -86,7 +86,7 @@ async function deleteCarHandler(req, res) {
     const { id } = req.params;
 
     try {
-        await CarService.deleteCar(id);
+        await CarRepository.delete(id);
         logger.info(`Car deleted successfully with id: ${id}`);
         res.status(200).json({ message: 'Car deleted successfully' });
     } catch (error) {
@@ -99,7 +99,7 @@ async function getCarHandler(req, res) {
     const { id } = req.params;
 
     try {
-        const car = await CarService.getCar(id);
+        const car = await CarRepository.findById(id);
         logger.info(`Car retrieved successfully with id: ${id}`);
         res.status(200).json(car);
     } catch (error) {
