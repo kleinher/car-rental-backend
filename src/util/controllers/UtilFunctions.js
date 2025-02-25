@@ -5,7 +5,7 @@ module.exports = {
     async createAddress(req) {
         logger.debug('Creating new driver address');
         const address = {
-            formatted_address: req.body.address,
+            formattedAddress: req.body.address,
             latitude: req.body.latitude,
             longitude: req.body.longitude,
         };

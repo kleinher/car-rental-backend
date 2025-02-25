@@ -56,7 +56,6 @@ module.exports = {
             logger.info(`Mechanic created successfully with id: ${nuevoMechanic.id}`);
             res.status(201).json(nuevoMechanic.id);
         } catch (error) {
-            logger.error(`Error creating mechanic: ${error.message}`);
             logger.error('Error al crear un mecanico' + error);
             res.status(500).json({ error: 'An error occurred while creating the mechanic' });
         }
