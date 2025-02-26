@@ -62,7 +62,7 @@ function getConversation(phoneNumber, licencePlate) {
 }
 
 // ***** MÉTODO PRINCIPAL *****
-async function validateKm(licencePlate, phoneNumber, kmValidar) {
+async function validateKm(licencePlate, kmValidar) {
     // 1. Obtener el coche y validaciones preliminares
     const car = await checkCarExists(licencePlate);
     checkKmIsGreater(car, kmValidar);
@@ -107,7 +107,7 @@ async function checkCarExists(licencePlate) {
  */
 function checkKmIsGreater(car, kmValidar) {
     if (Number(car.kilometers) > Number(kmValidar)) {
-        const err = `Los kilómetros ingresados para ${car.licensePlate} (${kmValidar}) ` +
+        const err = `Los kilómetros ingresados para ${car.licencePlate} (${kmValidar}) ` +
             `no son mayores que el anterior (${car.kilometers}).`;
         logger.error(err);
         throw new Error(err);
@@ -121,7 +121,7 @@ function checkKmIsGreater(car, kmValidar) {
 function calculateRecentDailyUsage(car, kmValidar) {
     const previousKm = Number(car.kilometers);
     const today = new Date();
-    const lastUpdateDate = new Date(car.lastUpdated);
+    const lastUpdateDate = new Date(car.lastUpdate);
 
     let daysDiff = (today - lastUpdateDate) / (1000 * 60 * 60 * 24);
     if (daysDiff < 1) {
@@ -187,67 +187,68 @@ function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
     CarRepository.update(car.licencePlate, car);
 }
 
-async function hadleMediaMessage(phoneNumber) {
-    sendMessage(phoneNumber, "Me lo pasas en texto?");
-}
+module.exports = {
+    async hadleMediaMessage(phoneNumber) {
+        sendMessage(phoneNumber, "Me lo pasas en texto?");
+    },
 
-async function handleUserMessage(phoneNumber, licencePlate, userInput) {
-    const messages = getConversation(phoneNumber, licencePlate);
+    async handleUserMessage(phoneNumber, licencePlate, userInput) {
+        const messages = getConversation(phoneNumber, licencePlate);
 
-    messages.push({ role: "user", content: userInput });
-    logger.info(`User message added: ${userInput}`);
+        messages.push({ role: "user", content: userInput });
+        logger.info(`User message added: ${userInput}`);
 
-    const gptResponse = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages,
-        functions: functions
-    });
+        const gptResponse = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages,
+            functions: functions
+        });
 
-    const choice = gptResponse.choices[0];
-    logger.info(`GPT response: ${JSON.stringify(choice)}`);
+        const choice = gptResponse.choices[0];
+        logger.info(`GPT response: ${JSON.stringify(choice)}`);
 
-    if (choice.finish_reason === "function_call") {
-        const { name, arguments } = choice.message.function_call;
-        if (name === "doNothing") {
-            logger.info(`Function call: ${name}`);
-            return { done: false };
-        }
-        if (name === "validateKm") {
-            const parsed = JSON.parse(arguments);
-            logger.info(`Function call: ${name} with arguments: ${JSON.stringify(parsed)}`);
-
-            try {
-                validateKm(parsed.licencePlate, phoneNumber, parsed.kmValidar);
-            }
-            catch (error) {
-                messages.push({
-                    role: "function",
-                    name: "validateKm",
-                    content: JSON.stringify({ error: error.message })
-                });
-                sendMessage(phoneNumber, error.message);
-                logger.error(`Validation error: ${error.message}`);
+        if (choice.finish_reason === "function_call") {
+            const { name, arguments } = choice.message.function_call;
+            if (name === "doNothing") {
+                logger.info(`Function call: ${name}`);
                 return { done: false };
             }
+            if (name === "validateKm") {
+                const parsed = JSON.parse(arguments);
+                logger.info(`Function call: ${name} with arguments: ${JSON.stringify(parsed)}`);
 
-            delete conversationMap[`${phoneNumber}-${licencePlate}`];
-            sendMessage(phoneNumber, "Muchas gracias por la ayuda, saludos!");
-            logger.info(`Kilómetros validados correctamente para ${licencePlate}`);
-            return { done: true };
-        }
-        if (name === "sendMessage") {
+                try {
+                    await validateKm(parsed.licencePlate, parsed.kmValidar);
+                }
+                catch (error) {
+                    messages.push({
+                        role: "function",
+                        name: "validateKm",
+                        content: JSON.stringify({ error: error.message })
+                    });
+                    sendMessage(phoneNumber, error.message);
+                    logger.error(`Validation error: ${error.message}`);
+                    return { done: false };
+                }
 
+                delete conversationMap[`${phoneNumber}-${licencePlate}`];
+                sendMessage(phoneNumber, "Muchas gracias por la ayuda, saludos!");
+                logger.info(`Kilómetros validados correctamente para ${licencePlate}`);
+                return { done: true };
+            }
+            if (name === "sendMessage") {
+
+            }
         }
+
+        messages.push({
+            role: "assistant",
+            content: choice.message.content
+        });
+
+        sendMessage(phoneNumber, choice.message.content);
+        logger.info(`Assistant response: ${choice.message.content}`);
+        return { done: false };
     }
+};
 
-    messages.push({
-        role: "assistant",
-        content: choice.message.content
-    });
-
-    sendMessage(phoneNumber, choice.message.content);
-    logger.info(`Assistant response: ${choice.message.content}`);
-    return { done: false };
-}
-
-module.exports = { handleUserMessage, hadleMediaMessage };

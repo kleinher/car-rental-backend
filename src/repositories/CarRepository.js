@@ -54,9 +54,9 @@ class CarRepository {
         }
     }
 
-    async findByPlate(licensePlate) {
+    async findByPlate(licencePlate) {
         try {
-            const car = await Car.findOne({ where: { licencePlate: licensePlate } });
+            const car = await Car.findOne({ where: { licencePlate: licencePlate } });
             if (!car) throw new Error('Car not found');
             return car;
         } catch (error) {
