@@ -75,7 +75,7 @@ async function validateKm(licencePlate, kmValidar) {
     const predictedDate = predictNext10kDate(kmValidar, newDailyUsage);
 
     // 4. Actualizar datos del coche y guardar
-    updateCarData(car, kmValidar, newDailyUsage, predictedDate);
+    await updateCarData(car, kmValidar, newDailyUsage, predictedDate);
 
     // 5. Notificar y retornar resultado
     broadcast();
@@ -172,19 +172,22 @@ function predictNext10kDate(kmValidar, dailyUsage) {
  *   - Actualiza los campos del coche con la nueva información.
  *   - Guarda en "base de datos" y maneja flags de mantenimiento, etc.
  */
-function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
+async function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
     // Actualizar km, fecha de última actualización
-    car.kilometers = kmValidar;
-    car.dailyUsage = dailyUsage;
-    car.lastUpdated = new Date().toISOString().split("T")[0];
-    car.estMaintainance = predictedDate;
+    const carData = {
+        kilometers: kmValidar,
+        dailyUsage: dailyUsage,
+        lastUpdated: new Date().toISOString().split("T")[0],
+        estMaintainance: predictedDate,
 
-    // Flags de mantenimiento (ejemplo simple)
-    car.inMaintenance = (kmValidar % 10000 === 0);
-    car.reminderSent = false;
-    car.reminderSentDate = null;
+        // Flags de mantenimiento (ejemplo simple)
+        inMaintenance: (kmValidar % 10000 === 0),
+        reminderSent: false,
+        reminderSentDate: null,
+    };
 
-    CarRepository.update(car.licencePlate, car);
+    await CarRepository.update(car.licencePlate, carData);
+
 }
 
 module.exports = {
