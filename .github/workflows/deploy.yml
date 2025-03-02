@@ -13,9 +13,6 @@ jobs:
       - name: 🚀 Clonar el repositorio
         uses: actions/checkout@v4
 
-      - name: 🔄 Actualizar el repositorio
-        run: git pull origin main
-
       - name: 🔑 Configurar SSH
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
