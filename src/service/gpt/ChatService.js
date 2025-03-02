@@ -150,6 +150,9 @@ function averageDailyUsage(oldUsage, newUsage) {
  *     usando la tasa de uso diario.
  */
 function predictNext10kDate(kmValidar, dailyUsage) {
+    if (!dailyUsage || dailyUsage <= 0) {
+        return null;
+    }
     // Siguiente múltiplo de 10k
     let nextMilestone = Math.ceil(kmValidar / 10000) * 10000;
     if (nextMilestone === kmValidar) {
@@ -157,7 +160,7 @@ function predictNext10kDate(kmValidar, dailyUsage) {
     }
 
     const kmToNextMilestone = nextMilestone - kmValidar;
-    let daysToMilestone = 999999; // valor por defecto si no hay uso diario
+    let daysToMilestone = Infinity;
     if (dailyUsage && dailyUsage > 0) {
         daysToMilestone = kmToNextMilestone / dailyUsage;
     }
@@ -180,7 +183,6 @@ async function updateCarData(car, kmValidar, dailyUsage, predictedDate) {
         lastUpdated: new Date().toISOString().split("T")[0],
         estMaintainance: predictedDate,
 
-        // Flags de mantenimiento (ejemplo simple)
         inMaintenance: (kmValidar % 10000 === 0),
         reminderSent: false,
         reminderSentDate: null,
